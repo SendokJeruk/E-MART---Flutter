@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:e_mart_11bdg/presentation/pages/login.dart';
+import 'package:e_mart_11bdg/presentation/pages/home.dart';
 import 'package:e_mart_11bdg/data/controllers/animate.controllers.dart';
+import 'package:e_mart_11bdg/presentation/routes/routeTransition.dart';
 
 class SplashView extends StatefulWidget {
   const SplashView({super.key});
@@ -20,9 +21,8 @@ class _SplashViewState extends State<SplashView> with SingleTickerProviderStateM
 
     Future.delayed(const Duration(seconds: 2), () {
       _splashController.startAnimation(() {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const Login()),
+        Navigator.of(context).pushReplacement(
+          FadeSlideRoute(page: const HomePage()),
         );
       });
     });
@@ -54,8 +54,8 @@ class _SplashViewState extends State<SplashView> with SingleTickerProviderStateM
           },
           child: Image.asset(
             'assets/images/emart.png',
-            fit: BoxFit.contain,
             width: 200,
+            fit: BoxFit.contain,
           ),
         ),
       ),

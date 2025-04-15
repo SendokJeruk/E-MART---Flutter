@@ -1,25 +1,17 @@
 import 'package:flutter/material.dart';
 
-class Login extends StatelessWidget {
-  const Login({super.key});
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
 
   @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget> [
-          SizedBox(
-            height: 100,
-            width: width,
-            child: Stack(
-              
-            ),
-          )
-        ],
-      ),
+    return const Scaffold(
+      
     );
   }
 }
