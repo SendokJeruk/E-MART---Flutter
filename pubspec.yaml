@@ -24,3 +24,9 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/
+    - assets/images/login-regist/
+    - assets/images/icons/
+  fonts:
+    - family: Righteous
+      fonts:
+        - asset: assets/fonts/Righteous/Righteous-Regular.ttf

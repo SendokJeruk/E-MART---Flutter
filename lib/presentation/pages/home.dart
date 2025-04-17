@@ -1,9 +1,11 @@
 import 'package:e_mart_11bdg/data/models/productApi.dart';
 import 'package:e_mart_11bdg/presentation/pages/splash.view.dart';
+import 'package:e_mart_11bdg/presentation/pages/view.dart';
 import 'package:flutter/material.dart';
 import 'package:e_mart_11bdg/presentation/widgets/card.dart';
 import 'package:e_mart_11bdg/presentation/widgets/skeleton.dart';
 import 'package:e_mart_11bdg/presentation/widgets/shimmerSKeleton.dart';
+import 'package:e_mart_11bdg/core/errors/imageError.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -28,21 +30,23 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width; // <- Tambahkan untuk responsive lebar
-    final screenHeight = MediaQuery.of(context).size.height; // <- Tambahkan untuk responsive tinggi
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
+      backgroundColor: Color.fromARGB(255, 255, 255, 255),
       resizeToAvoidBottomInset: true,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(80),
+        preferredSize: Size.fromHeight(100),
         child: AppBar(
           backgroundColor: Color(0xFFBF3131),
-          iconTheme: const IconThemeData(
-            color: Colors.white,
-          ),
+          iconTheme: const IconThemeData(color: Colors.white),
           flexibleSpace: SafeArea(
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05, vertical: 10), // <- Responsive padding horizontal
+              padding: EdgeInsets.symmetric(
+                horizontal: screenWidth * 0.05,
+                vertical: 10,
+              ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -50,7 +54,7 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       Expanded(
                         child: Container(
-                          height: 35, // bisa disesuaikan lagi jika perlu
+                          height: 35,
                           padding: EdgeInsets.symmetric(horizontal: 12),
                           decoration: BoxDecoration(
                             color: Colors.white,
@@ -72,7 +76,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                       ),
-                      SizedBox(width: screenWidth * 0.02), // <- Responsive spacing
+                      SizedBox(width: screenWidth * 0.02),
                       Container(
                         height: 35,
                         width: 35,
@@ -81,7 +85,10 @@ class _HomePageState extends State<HomePage> {
                           shape: BoxShape.circle,
                         ),
                         child: IconButton(
-                          icon: Icon(Icons.shopping_cart, color: Color(0xFFBF3131)),
+                          icon: Icon(
+                            Icons.shopping_cart,
+                            color: Color(0xFFBF3131),
+                          ),
                           iconSize: 21,
                           onPressed: () {},
                         ),
@@ -95,7 +102,10 @@ class _HomePageState extends State<HomePage> {
                           shape: BoxShape.circle,
                         ),
                         child: IconButton(
-                          icon: Icon(Icons.filter_list, color: Color(0xFFBF3131)),
+                          icon: Icon(
+                            Icons.filter_list,
+                            color: Color(0xFFBF3131),
+                          ),
                           iconSize: 21,
                           onPressed: () {},
                         ),
@@ -115,8 +125,8 @@ class _HomePageState extends State<HomePage> {
                 child: Column(
                   children: [
                     Container(
-                      width: screenWidth * 0.9, // <- Responsive width
-                      padding: EdgeInsets.all(20), // <- Disesuaikan agar tidak terlalu besar di layar kecil
+                      width: screenWidth * 0.9,
+                      padding: EdgeInsets.all(20),
                       margin: EdgeInsets.all(12),
                       decoration: BoxDecoration(
                         color: Colors.white,
@@ -135,7 +145,7 @@ class _HomePageState extends State<HomePage> {
                           Text(
                             'Hai People 👋',
                             style: TextStyle(
-                              fontSize: screenWidth * 0.045, // <- Responsive font size
+                              fontSize: screenWidth * 0.045,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -175,7 +185,6 @@ class _HomePageState extends State<HomePage> {
                       padding: EdgeInsets.all(5),
                       crossAxisSpacing: 1,
                       mainAxisSpacing: 2,
-                      // UBAHAN: Bikin responsive dengan ambil ukuran layar dari MediaQuery
                       childAspectRatio: MediaQuery.of(context).size.width /
                           (MediaQuery.of(context).size.height / 1.83),
                       shrinkWrap: true,
@@ -192,7 +201,9 @@ class _HomePageState extends State<HomePage> {
                           onTap: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => SplashView()),
+                              MaterialPageRoute(
+                                builder: (context) => ViewPage(),
+                              ),
                             );
                           },
                         ),

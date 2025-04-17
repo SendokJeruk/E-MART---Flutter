@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:e_mart_11bdg/presentation/pages/home.dart';
 import 'package:e_mart_11bdg/data/controllers/animate.controllers.dart';
 import 'package:e_mart_11bdg/presentation/routes/routeTransition.dart';
+import '../pages/login.dart';
 
 class SplashView extends StatefulWidget {
   const SplashView({super.key});
@@ -22,7 +23,7 @@ class _SplashViewState extends State<SplashView> with SingleTickerProviderStateM
     Future.delayed(const Duration(seconds: 2), () {
       _splashController.startAnimation(() {
         Navigator.of(context).pushReplacement(
-          FadeSlideRoute(page: const HomePage()),
+          FadeSlideRoute(page: const LoginPage()),
         );
       });
     });
@@ -37,6 +38,7 @@ class _SplashViewState extends State<SplashView> with SingleTickerProviderStateM
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       body: Center(
         child: AnimatedBuilder(
           animation: _splashController.controller,
@@ -53,7 +55,7 @@ class _SplashViewState extends State<SplashView> with SingleTickerProviderStateM
             );
           },
           child: Image.asset(
-            'assets/images/emart.png',
+            'assets/images/logoEmart.png',
             width: 200,
             fit: BoxFit.contain,
           ),
