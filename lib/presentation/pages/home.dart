@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:e_mart_11bdg/presentation/widgets/card.dart';
 import 'package:e_mart_11bdg/presentation/widgets/skeleton.dart';
 import 'package:e_mart_11bdg/presentation/widgets/shimmerSKeleton.dart';
+import 'package:e_mart_11bdg/presentation/widgets/bottom_bar.dart';
 import 'package:e_mart_11bdg/core/errors/imageError.dart';
 
 class HomePage extends StatefulWidget {
@@ -21,7 +22,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(seconds: 2), () {
+    Future.delayed(Duration(seconds: 1 % 2), () {
       setState(() {
         isLoaded = true;
       });
@@ -118,102 +119,105 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-      body: isLoaded
-          ? SingleChildScrollView(
-              child: Padding(
-                padding: EdgeInsets.only(bottom: 12),
-                child: Column(
-                  children: [
-                    Container(
-                      width: screenWidth * 0.9,
-                      padding: EdgeInsets.all(20),
-                      margin: EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black12,
-                            blurRadius: 4,
-                            offset: Offset(0, 2),
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Hai People 👋',
-                            style: TextStyle(
-                              fontSize: screenWidth * 0.045,
-                              fontWeight: FontWeight.bold,
+      body:
+          isLoaded
+              ? SingleChildScrollView(
+                child: Padding(
+                  padding: EdgeInsets.only(bottom: 12),
+                  child: Column(
+                    children: [
+                      Container(
+                        width: screenWidth * 0.9,
+                        padding: EdgeInsets.all(20),
+                        margin: EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black12,
+                              blurRadius: 4,
+                              offset: Offset(0, 2),
                             ),
-                          ),
-                          SizedBox(height: 4),
-                          Text(
-                            'Yuk cek produk baru & terbaik hari ini!',
-                            style: TextStyle(
-                              fontSize: screenWidth * 0.035,
-                              color: Colors.grey[700],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      width: screenWidth * 0.9,
-                      padding: EdgeInsets.all(15),
-                      margin: EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: Color(0xFFBF3131),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Column(
-                        children: [
-                          Text(
-                            'Yuk Cari Makanan Favorit-mu!',
-                            style: TextStyle(
-                              fontSize: screenWidth * 0.038,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    GridView.count(
-                      crossAxisCount: 2,
-                      padding: EdgeInsets.all(5),
-                      crossAxisSpacing: 1,
-                      mainAxisSpacing: 2,
-                      childAspectRatio: MediaQuery.of(context).size.width /
-                          (MediaQuery.of(context).size.height / 1.83),
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      children: [
-                        ProductCard(
-                          imageUrl:
-                              'https://img-global.cpcdn.com/recipes/df9a4018d168b654/680x482cq70/macaroni-saus-spaghetti-foto-resep-utama.jpg',
-                          title: 'Sneakers Wanita',
-                          price: 'Rp 325.000',
-                          sold: '500',
-                          seller: 'SepatuLaris',
-                          rating: 4.6,
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ViewPage(),
-                              ),
-                            );
-                          },
+                          ],
                         ),
-                      ],
-                    ),
-                  ],
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Hai People 👋',
+                              style: TextStyle(
+                                fontSize: screenWidth * 0.045,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 4),
+                            Text(
+                              'Yuk cek produk baru & terbaik hari ini!',
+                              style: TextStyle(
+                                fontSize: screenWidth * 0.035,
+                                color: Colors.grey[700],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        width: screenWidth * 0.9,
+                        padding: EdgeInsets.all(15),
+                        margin: EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Color(0xFFBF3131),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Column(
+                          children: [
+                            Text(
+                              'Yuk Cari Makanan Favorit-mu!',
+                              style: TextStyle(
+                                fontSize: screenWidth * 0.038,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      GridView.count(
+                        crossAxisCount: 2,
+                        padding: EdgeInsets.all(5),
+                        crossAxisSpacing: 1,
+                        mainAxisSpacing: 2,
+                        childAspectRatio:
+                            MediaQuery.of(context).size.width /
+                            (MediaQuery.of(context).size.height / 1.83),
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        children: List.generate(10, (index) {
+                          return ProductCard(
+                            imageUrl:
+                                'https://img-global.cpcdn.com/recipes/df9a4018d168b654/680x482cq70/macaroni-saus-spaghetti-foto-resep-utama.jpg',
+                            title: 'Makaroni Keju Sultan ',
+                            price: 'Rp 325.000',
+                            sold: '500',
+                            seller: 'SepatuLaris',
+                            rating: 4.6,
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ViewPage(),
+                                ),
+                              );
+                            },
+                          );
+                        }),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            )
-          : buildHomeShimmer(),
+              )
+              : buildHomeShimmer(),
+      bottomNavigationBar: BottomBar(currentIndex: 2),
     );
   }
 }
