@@ -28,6 +28,21 @@ class ProductDetail extends StatefulWidget {
 
 class _ProductDetailState extends State<ProductDetail> {
   bool showFullText = false;
+  int _quantity = 0;
+
+  void _increment() {
+    setState(() {
+      _quantity++;
+    });
+  }
+
+  void _decrement() {
+    setState(() {
+      if (_quantity > 0) {
+        _quantity--;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -89,14 +104,41 @@ class _ProductDetailState extends State<ProductDetail> {
                 ],
               ),
               const SizedBox(height: 16),
-              Text(
-                'Deskripsi Produk',
-                style: TextStyle(
-                  fontFamily: 'Righteous',
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                ),
+
+//DESKRIPSI DAN BUTTON
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Deskripsi Produk',
+                    style: TextStyle(
+                      fontFamily: 'Righteous',
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.remove),
+                        onPressed: _decrement,
+                      ),
+                      Text(
+                        '$_quantity',
+                        style: TextStyle(
+                          color: Color(0xFFBF3131),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.add),
+                        onPressed: _increment,
+                      )
+                    ],
+                  )
+                ],
               ),
+
               const Divider(),
               SizedBox(height: 4),
               RichText(
