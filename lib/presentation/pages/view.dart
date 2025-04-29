@@ -18,7 +18,7 @@ class _ViewPageState extends State<ViewPage> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(seconds: 2), () {
+    Future.delayed(Duration(seconds: 1%2), () {
       setState(() {
         isLoading = false;
       });
@@ -202,7 +202,7 @@ class _ViewPageState extends State<ViewPage> {
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
                   children: [
-                    ProductCard(
+                    ProductCard( 
                       imageUrl:
                           'https://img-global.cpcdn.com/recipes/df9a4018d168b654/680x482cq70/macaroni-saus-spaghetti-foto-resep-utama.jpg',
                       title: 'Sneakers Wanita',
