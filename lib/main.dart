@@ -1,6 +1,8 @@
+import 'package:e_mart_11bdg/presentation/pages/home.dart';
 import 'package:e_mart_11bdg/presentation/pages/splash.view.dart';
 import 'package:flutter/material.dart';
 import 'presentation/pages/login.dart';
+import './presentation/pages/view.dart';
 
 void main() {
   runApp(const MainApp());
@@ -17,7 +19,7 @@ class MainApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: SplashView(),
+      home: LoginPage(),
     );
   }
 }
