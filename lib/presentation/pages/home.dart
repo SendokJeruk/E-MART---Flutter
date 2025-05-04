@@ -7,6 +7,8 @@ import 'package:e_mart_11bdg/presentation/widgets/skeleton.dart';
 import 'package:e_mart_11bdg/presentation/widgets/shimmerSKeleton.dart';
 import 'package:e_mart_11bdg/presentation/widgets/bottom_bar.dart';
 import 'package:e_mart_11bdg/core/errors/imageError.dart';
+import 'package:e_mart_11bdg/presentation/widgets/small_box.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -132,7 +134,7 @@ class _HomePageState extends State<HomePage> {
                         margin: EdgeInsets.all(12),
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(20),
                           boxShadow: [
                             BoxShadow(
                               color: Colors.black12,
@@ -140,32 +142,113 @@ class _HomePageState extends State<HomePage> {
                               offset: Offset(0, 2),
                             ),
                           ],
+                           border: Border(
+                            top: BorderSide(
+                              color: Color(0xFFBF3131),
+                              width: 0.8,
+                            ),
+                          bottom: BorderSide(
+                              color: Color(0xFFBF3131),
+                              width: 0.8,
+                            ),
+                          ),
                         ),
+//card page
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              'Hai People 👋',
+                              '------| Mungkin kamu cari? |------',
                               style: TextStyle(
                                 fontSize: screenWidth * 0.045,
                                 fontWeight: FontWeight.bold,
+                                fontFamily: 'Righteous',
+                                 color: Color(0xFFBF3131),
                               ),
                             ),
-                            SizedBox(height: 4),
-                            Text(
-                              'Yuk cek produk baru & terbaik hari ini!',
-                              style: TextStyle(
-                                fontSize: screenWidth * 0.035,
-                                color: Colors.grey[700],
-                              ),
+                            SizedBox(height: 20),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+    //Kotak Kecil 
+                                Expanded(
+                                  flex: 2,
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          SmallBox(title: 'Pedas' , icon: FontAwesomeIcons.fireFlameCurved,),
+                                          SmallBox(title: 'Manis', icon: FontAwesomeIcons.cookieBite,),
+                                          SmallBox(title: 'Asin', icon: FontAwesomeIcons.bowlFood,),
+                                        ],
+                                      ),
+                                      SizedBox(height: 10),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          SmallBox(title: 'Murah', icon: FontAwesomeIcons.tags),
+                                          SmallBox(title: '5k', icon: FontAwesomeIcons.wallet),
+                                          SmallBox(title: 'Promo', icon: FontAwesomeIcons.gift,),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+
+                                SizedBox(width: 10),
+    //Kotak besar
+                                Expanded(
+                                  flex: 1,
+                                  child: Container(
+                                    height:
+                                        (screenWidth * 0.1) * 3.6 + 10,
+                                      decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(12),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black12,
+                                          blurRadius: 4,
+                                          offset: Offset(0, 2),
+                                        ),
+                                      ],
+                                       border: Border(
+                                        left: BorderSide(
+                                          color: Color(0xFFBF3131),
+                                          width: 0.8,
+                                        ),
+                                        right: BorderSide(
+                                          color: Color(0xFFBF3131),
+                                          width: 0.8,
+                                        ),
+                                      ),
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        'Promo Spesial',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 14,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
                       ),
+
+    //BATAS AWAL
                       Container(
-                        width: screenWidth * 0.9,
-                        padding: EdgeInsets.all(15),
-                        margin: EdgeInsets.all(12),
+                        width: screenWidth * 0.6,
+                        padding: EdgeInsets.all(5),
+                        margin: EdgeInsets.all(2),
                         decoration: BoxDecoration(
                           color: Color(0xFFBF3131),
                           borderRadius: BorderRadius.circular(12),
@@ -177,6 +260,7 @@ class _HomePageState extends State<HomePage> {
                               style: TextStyle(
                                 fontSize: screenWidth * 0.038,
                                 color: Colors.white,
+                                fontFamily: 'Righteous',
                               ),
                             ),
                           ],
