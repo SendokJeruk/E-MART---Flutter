@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:e_mart_11bdg/presentation/pages/Profile.dart';
 import 'package:e_mart_11bdg/presentation/pages/home.dart';
+import 'package:e_mart_11bdg/presentation/pages/notifikasi.dart';
 import 'package:e_mart_11bdg/presentation/pages/service.dart';
 import 'package:e_mart_11bdg/presentation/pages/splash.view.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +24,7 @@ class MainApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: ViewPage(),
+      home: NotifPage(),
     );
   }
 }

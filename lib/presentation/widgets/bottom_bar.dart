@@ -1,9 +1,10 @@
+import 'package:e_mart_11bdg/presentation/pages/notifikasi.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:e_mart_11bdg/presentation/pages/home.dart';
 import 'package:e_mart_11bdg/presentation/pages/profile.dart';
 // import 'package:e_mart_11bdg/presentation/pages/notifikasi.dart';
-// import 'package:e_mart_11bdg/presentation/pages/trending.dart';
+import 'package:e_mart_11bdg/presentation/pages/trending.dart';
 import 'package:e_mart_11bdg/presentation/pages/service.dart';
 
 class BottomBar extends StatelessWidget {
@@ -16,11 +17,22 @@ class BottomBar extends StatelessWidget {
 
     switch (index) {
       case 0:
-        // Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const NotifikasiPage()));
+        Navigator.pushReplacement(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) => const NotifPage(),
+            transitionDuration: Duration(seconds: 0)
+          ),
+        );
         break;
       case 1:
-        // Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const TrendingPage()));
-        break;
+         Navigator.pushReplacement(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) => const TrendingPage(),
+            transitionDuration: Duration(seconds: 0)
+          ),
+        );
       case 2:
         Navigator.pushReplacement(
           context,
@@ -92,14 +104,14 @@ class BottomBar extends StatelessWidget {
           BottomNavigationBarItem(
             icon: Padding(padding:
             EdgeInsets.only(top: 10),
-            child: Icon(FontAwesomeIcons.home)
+            child: Icon(FontAwesomeIcons.house)
             ),
             label: 'Home',
           ),
           BottomNavigationBarItem(
             icon: Padding(padding:
             EdgeInsets.only(top: 10),
-            child: Icon(FontAwesomeIcons.headphones),
+            child: Icon(FontAwesomeIcons.solidComment),
             ),
             label: 'Service',
           ),
