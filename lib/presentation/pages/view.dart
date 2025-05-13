@@ -3,6 +3,7 @@ import 'package:e_mart_11bdg/presentation/widgets/shimmerSKeleton.dart';
 import 'package:flutter/material.dart';
 import 'package:e_mart_11bdg/presentation/widgets/product.dart';
 import 'package:e_mart_11bdg/presentation/widgets/card.dart';
+import 'package:e_mart_11bdg/presentation/pages/payment.dart';
 
 class ViewPage extends StatefulWidget {
   const ViewPage({super.key});
@@ -105,7 +106,12 @@ class _ViewPageState extends State<ViewPage> {
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () {
-                          print('Order Ditekan');
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => PaymentPage(),
+                            ),
+                          );
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Color(0xFFBF3131),
