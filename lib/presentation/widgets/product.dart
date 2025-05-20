@@ -1,6 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:e_mart_11bdg/core/errors/imageError.dart';
+import 'package:provider/provider.dart';
+import 'package:e_mart_11bdg/presentation/provider/payment_provider.dart';
 
 class ProductDetail extends StatefulWidget {
   final String imageUrl;
@@ -46,14 +48,14 @@ class _ProductDetailState extends State<ProductDetail> {
 
   @override
   Widget build(BuildContext context) {
-    final String firstText =
-        widget.description.length > 100
-            ? widget.description.substring(0, 100)
-            : widget.description;
-    final String fullText =
-        widget.description.length > 100
-            ? widget.description.substring(100)
-            : '';
+    final productProvider = Provider.of<PaymentProvider>(context);
+
+    final String firstText = widget.description.length > 100
+        ? widget.description.substring(0, 100)
+        : widget.description;
+    final String fullText = widget.description.length > 100
+        ? widget.description.substring(100)
+        : '';
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -117,23 +119,28 @@ class _ProductDetailState extends State<ProductDetail> {
                       fontSize: 20,
                     ),
                   ),
-                  Row(
+                 Row(
                     children: [
                       IconButton(
-                        icon: Icon(Icons.remove),
-                        onPressed: _decrement,
+                        icon: const Icon(Icons.remove),
+                        onPressed: () {
+                          productProvider.decrement();
+                        },
                       ),
                       Text(
-                        '$_quantity',
-                        style: TextStyle(
+                        '${productProvider.quantity}',
+                        style: const TextStyle(
                           color: Color(0xFFBF3131),
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       IconButton(
-                        icon: Icon(Icons.add),
-                        onPressed: _increment,
-                      )
+                        icon: const Icon(Icons.add),
+                        onPressed: () {
+                          productProvider.increment();
+                          
+                        },
+                      ),
                     ],
                   )
                 ],
