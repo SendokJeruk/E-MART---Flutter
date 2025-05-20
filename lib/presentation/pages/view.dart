@@ -1,3 +1,4 @@
+import 'package:e_mart_11bdg/presentation/widgets/dialogCart.dart';
 import 'package:e_mart_11bdg/presentation/widgets/product_skeleton.dart';
 import 'package:e_mart_11bdg/presentation/widgets/shimmerSKeleton.dart';
 import 'package:flutter/material.dart';
@@ -74,7 +75,7 @@ class _ViewPageState extends State<ViewPage> {
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () {
-                          print('Keranjang Ditekan');
+                          showDialog(context: context, builder: (context) => const CartNotification());
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Color(0xFFBF3131),
