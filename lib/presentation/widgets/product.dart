@@ -2,7 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:e_mart_11bdg/core/errors/imageError.dart';
 import 'package:provider/provider.dart';
-import 'package:e_mart_11bdg/presentation/provider/payment_provider.dart';
+import 'package:e_mart_11bdg/presentation/provider/product_provider.dart';
 
 class ProductDetail extends StatefulWidget {
   final String imageUrl;
