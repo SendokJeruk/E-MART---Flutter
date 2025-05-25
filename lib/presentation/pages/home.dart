@@ -142,7 +142,7 @@ class _HomePageState extends State<HomePage> {
                               offset: Offset(0, 2),
                             ),
                           ],
-                           border: Border(
+                          border: Border(
                             top: BorderSide(
                               color: Color(0xFFBF3131),
                               width: 0.8,
@@ -163,7 +163,7 @@ class _HomePageState extends State<HomePage> {
                                 fontSize: screenWidth * 0.045,
                                 fontWeight: FontWeight.bold,
                                 fontFamily: 'Righteous',
-                                 color: Color(0xFFBF3131),
+                                color: Color(0xFFBF3131),
                               ),
                             ),
                             SizedBox(height: 20),
@@ -215,7 +215,7 @@ class _HomePageState extends State<HomePage> {
                                           offset: Offset(0, 2),
                                         ),
                                       ],
-                                       border: Border(
+                                      border: Border(
                                         left: BorderSide(
                                           color: Color(0xFFBF3131),
                                           width: 0.8,
@@ -275,7 +275,7 @@ class _HomePageState extends State<HomePage> {
                             MediaQuery.of(context).size.width /
                             (MediaQuery.of(context).size.height / 1.83),
                         shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
+                        physics: NeverScrollableScrollPhysics(),  
                         children: List.generate(10, (index) {
                           return ProductCard(
                             imageUrl:

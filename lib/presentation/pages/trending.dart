@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:e_mart_11bdg/presentation/widgets/bottom_bar.dart';
+import 'package:e_mart_11bdg/presentation/provider/productCard_provider.dart';
+import 'package:e_mart_11bdg/presentation/widgets/card.dart'; 
 
 class TrendingPage extends StatefulWidget {
   const TrendingPage({super.key});
@@ -11,13 +14,14 @@ class TrendingPage extends StatefulWidget {
 class _TrendingPageState extends State<TrendingPage> {
   @override
   Widget build(BuildContext context) {
-     final screenWidth = MediaQuery.of(context).size.width;
-     final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
 
-    return  Scaffold(
-        resizeToAvoidBottomInset: true,
-//APPBAR
-        appBar: PreferredSize(
+    return Scaffold(
+      resizeToAvoidBottomInset: true,
+
+      // APPBAR
+      appBar: PreferredSize(
         preferredSize: Size.fromHeight(100),
         child: AppBar(
           backgroundColor: Color(0xFFBF3131),
@@ -99,7 +103,49 @@ class _TrendingPageState extends State<TrendingPage> {
           ),
         ),
       ),
+
       backgroundColor: Colors.white,
+
+      body: Consumer<ProductProvider>(
+        builder: (context, productProvider, _) {
+          final trending = productProvider.trendingProducts;
+
+          if (trending.isEmpty) {
+            return Center(child: Text('Tidak ada produk trending'));
+          }
+
+          return GridView.builder(
+            padding: EdgeInsets.all(5),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 1,
+              mainAxisSpacing: 2,
+              childAspectRatio: 
+                  MediaQuery.of(context).size.width /
+                  (MediaQuery.of(context).size.height / 1.83),
+            ),
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),  
+            itemCount: trending.length,
+            itemBuilder: (context, index) {
+              final product = trending[index];
+              return ProductCard(
+                imageUrl: product.imageUrl,
+                title: product.title,
+                price: product.price,
+                sold: product.sold,
+                seller: product.seller,
+                rating: product.rating,
+                onTap: () {
+                  // TODO: bisa navigasi ke halaman detail produk
+                },
+              );
+            },
+          );
+        },
+      ),
+
+      // Bottom Navigation Bar
       bottomNavigationBar: BottomBar(currentIndex: 1),
     );
   }

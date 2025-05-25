@@ -6,7 +6,9 @@ import 'package:e_mart_11bdg/presentation/pages/notifikasi.dart';
 import 'package:e_mart_11bdg/presentation/pages/payment.dart';
 import 'package:e_mart_11bdg/presentation/pages/service.dart';
 import 'package:e_mart_11bdg/presentation/pages/splash.view.dart';
+import 'package:e_mart_11bdg/presentation/pages/cart.dart';
 import 'package:e_mart_11bdg/presentation/provider/payment_provider.dart';
+import 'package:e_mart_11bdg/presentation/provider/productCard_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'presentation/widgets/notification_provider.dart';
@@ -19,6 +21,7 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (context) => NotificationProvider()),
         ChangeNotifierProvider(create: (context) => PaymentProvider()),
+        ChangeNotifierProvider(create: (_) => ProductProvider()),
       ],
       child: const MainApp(),
     ),
@@ -37,7 +40,7 @@ class MainApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: ViewPage(),
+      home: HomePage(),
     );
   }
 }
