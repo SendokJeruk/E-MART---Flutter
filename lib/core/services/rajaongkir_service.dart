@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 class RajaOngkirService {
-  final String apiKey = 'gBXP8M1xc490bbd12374960aDCYAYrc8';
+  final String apiKey = '';
   final String baseUrl = 'https://rajaongkir.komerce.id/api/v1/destination/domestic-destination';
 
   Future<List<dynamic>> getDestinations({String search = 'bandung'}) async {
