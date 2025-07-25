@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:e_mart_11bdg/presentation/pages/payment.dart';
+import 'package:e_mart_11bdg/core/errors/imageError.dart';
 
 class CartPage extends StatefulWidget {
   const CartPage({super.key});
@@ -47,7 +48,7 @@ class _CartPageState extends State<CartPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.red,
+        backgroundColor:Color(0xFFBF3131),
         title: Text(
           'Keranjang',
           style: const TextStyle(
@@ -78,15 +79,18 @@ class _CartPageState extends State<CartPage> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Checkbox(
-                          activeColor: Colors.red,
+                          activeColor:Color(0xFFBF3131),
                           value: item.selected,
                           onChanged: (value) =>
                               toggleSelection(index, value),
                         ),
-                        SizedBox(
-                          width: screenWidth * 0.22,
-                          height: screenWidth * 0.22,
-                          child: Image.network(item.imageUrl),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: ErrorImageHandler(
+                            imageUrl: item.imageUrl,
+                            width: screenWidth * 0.22,
+                            height: screenWidth * 0.22,
+                            fit: BoxFit.cover ,),
                         ),
                         SizedBox(width: screenWidth * 0.03),
                         Expanded(

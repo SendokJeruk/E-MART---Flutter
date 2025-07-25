@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class ProductApiService {
-  static const String baseUrl = '';
+  static const String baseUrl = 'https://rajaongkir.komerce.id/api/v1/destination/domestic-destination';
 
   Future<List<Post>> fetchProducts() async {
     final response = await http.get(Uri.parse('$baseUrl/products'));

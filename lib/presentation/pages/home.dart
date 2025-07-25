@@ -1,4 +1,5 @@
 import 'package:e_mart_11bdg/data/models/productApi.dart';
+import 'package:e_mart_11bdg/presentation/pages/cart.dart';
 import 'package:e_mart_11bdg/presentation/pages/splash.view.dart';
 import 'package:e_mart_11bdg/presentation/pages/view.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ import 'package:e_mart_11bdg/presentation/widgets/bottom_bar.dart';
 import 'package:e_mart_11bdg/core/errors/imageError.dart';
 import 'package:e_mart_11bdg/presentation/widgets/small_box.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:e_mart_11bdg/presentation/pages/payment.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -93,7 +95,14 @@ class _HomePageState extends State<HomePage> {
                             color: Color(0xFFBF3131),
                           ),
                           iconSize: 21,
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => CartPage(),
+                              ),
+                            );
+                          },
                         ),
                       ),
                       SizedBox(width: screenWidth * 0.02),
@@ -110,7 +119,14 @@ class _HomePageState extends State<HomePage> {
                             color: Color(0xFFBF3131),
                           ),
                           iconSize: 21,
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => PaymentPage(),
+                              ),
+                            );
+                          },
                         ),
                       ),
                     ],
@@ -147,13 +163,13 @@ class _HomePageState extends State<HomePage> {
                               color: Color(0xFFBF3131),
                               width: 0.8,
                             ),
-                          bottom: BorderSide(
+                            bottom: BorderSide(
                               color: Color(0xFFBF3131),
                               width: 0.8,
                             ),
                           ),
                         ),
-//card page
+                        //card page
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
@@ -170,7 +186,7 @@ class _HomePageState extends State<HomePage> {
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-    //Kotak Kecil 
+                                //Kotak Kecil
                                 Expanded(
                                   flex: 2,
                                   child: Column(
@@ -179,9 +195,20 @@ class _HomePageState extends State<HomePage> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceEvenly,
                                         children: [
-                                          SmallBox(title: 'Pedas' , icon: FontAwesomeIcons.fireFlameCurved,),
-                                          SmallBox(title: 'Manis', icon: FontAwesomeIcons.cookieBite,),
-                                          SmallBox(title: 'Asin', icon: FontAwesomeIcons.bowlFood,),
+                                          SmallBox(
+                                            title: 'Pedas',
+                                            icon:
+                                                FontAwesomeIcons
+                                                    .fireFlameCurved,
+                                          ),
+                                          SmallBox(
+                                            title: 'Manis',
+                                            icon: FontAwesomeIcons.cookieBite,
+                                          ),
+                                          SmallBox(
+                                            title: 'Asin',
+                                            icon: FontAwesomeIcons.bowlFood,
+                                          ),
                                         ],
                                       ),
                                       SizedBox(height: 10),
@@ -189,9 +216,18 @@ class _HomePageState extends State<HomePage> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceEvenly,
                                         children: [
-                                          SmallBox(title: 'Murah', icon: FontAwesomeIcons.tags),
-                                          SmallBox(title: '5k', icon: FontAwesomeIcons.wallet),
-                                          SmallBox(title: 'Promo', icon: FontAwesomeIcons.gift,),
+                                          SmallBox(
+                                            title: 'Murah',
+                                            icon: FontAwesomeIcons.tags,
+                                          ),
+                                          SmallBox(
+                                            title: '5k',
+                                            icon: FontAwesomeIcons.wallet,
+                                          ),
+                                          SmallBox(
+                                            title: 'Promo',
+                                            icon: FontAwesomeIcons.gift,
+                                          ),
                                         ],
                                       ),
                                     ],
@@ -199,13 +235,12 @@ class _HomePageState extends State<HomePage> {
                                 ),
 
                                 SizedBox(width: 10),
-    //Kotak besar
+                                //Kotak besar
                                 Expanded(
                                   flex: 1,
                                   child: Container(
-                                    height:
-                                        (screenWidth * 0.1) * 3.6 + 10,
-                                      decoration: BoxDecoration(
+                                    height: (screenWidth * 0.1) * 3.6 + 10,
+                                    decoration: BoxDecoration(
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(12),
                                       boxShadow: [
@@ -244,7 +279,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
 
-    //BATAS AWAL
+                      //BATAS AWAL
                       Container(
                         width: screenWidth * 0.6,
                         padding: EdgeInsets.all(5),
@@ -275,7 +310,7 @@ class _HomePageState extends State<HomePage> {
                             MediaQuery.of(context).size.width /
                             (MediaQuery.of(context).size.height / 1.83),
                         shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),  
+                        physics: NeverScrollableScrollPhysics(),
                         children: List.generate(10, (index) {
                           return ProductCard(
                             imageUrl:
