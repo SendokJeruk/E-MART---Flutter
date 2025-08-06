@@ -16,6 +16,7 @@ import 'presentation/widgets/notification_provider.dart';
 import 'presentation/pages/login.dart';
 import './presentation/pages/view.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'presentation/pages/DetailToko/produk.dart';
 
 void main() {
   runApp(
@@ -43,7 +44,7 @@ class MainApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: HomePage(),
+      home: ProdukDetailPerson(),
     );
   }
 }
