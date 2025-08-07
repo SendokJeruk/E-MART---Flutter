@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import '../widgets/loginAnimation.dart';
+import 'package:e_mart_11bdg/presentation/widgets/sosialButton.dart';
+import 'package:e_mart_11bdg/core/services/auth_services.dart';
+import 'package:e_mart_11bdg/presentation/pages/home.dart';
+import 'package:e_mart_11bdg/presentation/pages/register.dart';
 import 'package:e_mart_11bdg/data/controllers/loginAnimate.dart';
-import '../widgets/sosialButton.dart';
-import '../pages/home.dart';
+
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -15,6 +17,11 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   late LoginAnimationController animationController;
 
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  bool isLoading = false;
+
   @override
   void initState() {
     super.initState();
@@ -25,7 +32,38 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   @override
   void dispose() {
     animationController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
     super.dispose();
+  }
+
+  void _handleLogin() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    final success = await AuthService().login(
+      emailController.text.trim(),
+      passwordController.text.trim(),
+    );
+
+    setState(() {
+      isLoading = false;
+    });
+
+    if (success) {
+      // Navigasi ke halaman Home
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage()),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Login gagal. Cek email atau password.'),
+        ),
+      );
+    }
   }
 
   @override
@@ -33,7 +71,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     final width = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 255, 255, 255),
+      backgroundColor: Colors.white,
       body: Column(
         children: [
           SlideTransition(
@@ -74,17 +112,17 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
               ),
             ),
           ),
-          SizedBox(height: 0),
+          const SizedBox(height: 0),
           SlideTransition(
             position: animationController.slide1,
             child: FadeTransition(
               opacity: animationController.fade1,
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text(
+                    const Text(
                       "LOGIN | E-MART",
                       style: TextStyle(
                         color: Color(0xFFBF3131),
@@ -93,14 +131,14 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                         fontSize: 25,
                       ),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     Container(
                       width: 300,
-                      padding: EdgeInsets.symmetric(horizontal: 15),
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
                         color: Colors.white,
-                        boxShadow: [
+                        boxShadow: const [
                           BoxShadow(
                             offset: Offset(0, 6),
                             spreadRadius: 0,
@@ -110,8 +148,13 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                         ],
                       ),
                       child: TextField(
-                        style: TextStyle(fontSize: 12, fontFamily: 'Righteous'),
-                        decoration: InputDecoration(
+                        controller: emailController,
+                        keyboardType: TextInputType.emailAddress,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontFamily: 'Righteous',
+                        ),
+                        decoration: const InputDecoration(
                           hintText: 'Masukkan Email',
                           hintStyle: TextStyle(
                             color: Colors.grey,
@@ -121,14 +164,14 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                         ),
                       ),
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     Container(
                       width: 300,
-                      padding: EdgeInsets.symmetric(horizontal: 15),
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
                         color: Colors.white,
-                        boxShadow: [
+                        boxShadow: const [
                           BoxShadow(
                             offset: Offset(0, 6),
                             spreadRadius: 0,
@@ -138,8 +181,13 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                         ],
                       ),
                       child: TextField(
-                        style: TextStyle(fontSize: 12, fontFamily: 'Righteous'),
-                        decoration: InputDecoration(
+                        controller: passwordController,
+                        obscureText: true,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontFamily: 'Righteous',
+                        ),
+                        decoration: const InputDecoration(
                           hintText: 'Masukkan Password',
                           hintStyle: TextStyle(
                             color: Colors.grey,
@@ -149,24 +197,19 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                         ),
                       ),
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     GestureDetector(
-                      onTap: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (context) => HomePage()),
-                        );
-                      },
+                      onTap: isLoading ? null : _handleLogin,
                       child: Container(
                         width: 100,
-                        padding: EdgeInsets.symmetric(
+                        padding: const EdgeInsets.symmetric(
                           horizontal: 30,
                           vertical: 12,
                         ),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
                           color: Colors.red,
-                          boxShadow: [
+                          boxShadow: const [
                             BoxShadow(
                               offset: Offset(0, 6),
                               spreadRadius: 0,
@@ -176,28 +219,37 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                           ],
                         ),
                         child: Center(
-                          child: Text(
-                            'LOGIN',
-                            style: TextStyle(
-                              fontSize: 11,
-                              fontFamily: 'Righteous',
-                              color: Colors.white,
-                              letterSpacing: 1,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
+                          child: isLoading
+                              ? const SizedBox(
+                                  width: 16,
+                                  height: 16,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                  ),
+                                )
+                              : const Text(
+                                  'LOGIN',
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    fontFamily: 'Righteous',
+                                    color: Colors.white,
+                                    letterSpacing: 1,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                         ),
                       ),
                     ),
-                    SizedBox(height: 0),
+                    const SizedBox(height: 0),
                     Container(
-                      padding: EdgeInsets.symmetric(vertical: 16.0),
+                      padding: const EdgeInsets.symmetric(vertical: 16.0),
                       child: Column(
                         children: [
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(
+                              const Text(
                                 "Don't have an account?",
                                 style: TextStyle(
                                   fontSize: 16,
@@ -206,12 +258,14 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                                   fontFamily: 'Righteous',
                                 ),
                               ),
-                              SizedBox(width: 6),
+                              const SizedBox(width: 6),
                               GestureDetector(
                                 onTap: () {
-                                  print('Register tapped');
+                                  Navigator.pushReplacement(
+                                    context, 
+                                    MaterialPageRoute(builder: (context) => const RegisterPage()));
                                 },
-                                child: Text(
+                                child: const Text(
                                   "Register",
                                   style: TextStyle(
                                     fontSize: 16,
@@ -223,16 +277,16 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                               ),
                             ],
                           ),
-                          SizedBox(height: 8),
+                          const SizedBox(height: 8),
                           Container(
                             height: 2,
-                            margin: EdgeInsets.symmetric(horizontal: 40),
+                            margin: const EdgeInsets.symmetric(horizontal: 40),
                             color: const Color.fromARGB(255, 139, 40, 32),
                           ),
                         ],
                       ),
                     ),
-                    Text(
+                    const Text(
                       'Or Login With',
                       style: TextStyle(
                         fontFamily: 'Righteous',
@@ -240,7 +294,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                         color: Color(0xFFBF3131),
                       ),
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     GoogleLoginButton(
                       onPressed: () {
                         print('Google Sign In tapped');
