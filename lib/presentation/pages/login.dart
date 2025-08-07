@@ -1,4 +1,3 @@
-import 'package:e_mart_11bdg/core/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:e_mart_11bdg/presentation/widgets/sosialButton.dart';
@@ -6,9 +5,7 @@ import 'package:e_mart_11bdg/core/services/auth_services.dart';
 import 'package:e_mart_11bdg/presentation/pages/home.dart';
 import 'package:e_mart_11bdg/presentation/pages/register.dart';
 import 'package:e_mart_11bdg/data/controllers/loginAnimate.dart';
-import '../widgets/sosialButton.dart';
-import '../pages/home.dart';
-import 'package:e_mart_11bdg/data/models/User.dart';
+
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -34,8 +31,6 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
     animationController.dispose();
     emailController.dispose();
     passwordController.dispose();
@@ -76,14 +71,14 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     final width = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+      backgroundColor: Colors.white,
       body: Column(
         children: [
           SlideTransition(
             position: animationController.slide1,
             child: FadeTransition(
               opacity: animationController.fade1,
-              child: SizedBox(
+              child: Container(
                 height: 400,
                 child: Stack(
                   children: [
@@ -186,7 +181,6 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                         ],
                       ),
                       child: TextField(
-
                         controller: passwordController,
                         obscureText: true,
                         style: const TextStyle(
@@ -201,12 +195,11 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                           ),
                           border: InputBorder.none,
                         ),
-                        onSubmitted: (_) => _login(),
                       ),
                     ),
                     const SizedBox(height: 16),
                     GestureDetector(
-                      onTap: _isLoading ? null : _handleLogin,
+                      onTap: isLoading ? null : _handleLogin,
                       child: Container(
                         width: 100,
                         padding: const EdgeInsets.symmetric(
@@ -215,7 +208,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                         ),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
-                          color: _isLoading ? Colors.grey : Colors.red,
+                          color: Colors.red,
                           boxShadow: const [
                             BoxShadow(
                               offset: Offset(0, 6),
@@ -304,8 +297,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                     const SizedBox(height: 10),
                     GoogleLoginButton(
                       onPressed: () {
-                        // TODO: implement google sign in
-                        debugPrint('Google Sign In tapped');
+                        print('Google Sign In tapped');
                       },
                     ),
                   ],

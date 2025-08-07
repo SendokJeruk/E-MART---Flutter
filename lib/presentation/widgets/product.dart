@@ -1,3 +1,4 @@
+import 'package:e_mart_11bdg/presentation/pages/DetailToko/produk.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:e_mart_11bdg/core/errors/imageError.dart';
@@ -50,12 +51,14 @@ class _ProductDetailState extends State<ProductDetail> {
   Widget build(BuildContext context) {
     final productProvider = Provider.of<PaymentProvider>(context);
 
-    final String firstText = widget.description.length > 100
-        ? widget.description.substring(0, 100)
-        : widget.description;
-    final String fullText = widget.description.length > 100
-        ? widget.description.substring(100)
-        : '';
+    final String firstText =
+        widget.description.length > 100
+            ? widget.description.substring(0, 100)
+            : widget.description;
+    final String fullText =
+        widget.description.length > 100
+            ? widget.description.substring(100)
+            : '';
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -87,27 +90,65 @@ class _ProductDetailState extends State<ProductDetail> {
                   fontWeight: FontWeight.w900,
                 ),
               ),
-              const SizedBox(height: 0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Penjual: ${widget.seller}',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  Row(
-                    children: [
-                      Icon(Icons.star, color: Colors.amber, size: 18),
-                      const SizedBox(width: 4),
-                      Text('${widget.rating} | Terjual ${widget.sold}'),
-                      const SizedBox(width: 8),
-                    ],
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
 
-//DESKRIPSI DAN BUTTON
+              //BATAS AWAL BAGIAN TOKO
+
+              const SizedBox(height: 0),
+              Padding(
+                padding: const EdgeInsets.only(
+                  top: 12.0,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ProdukDetailPerson(),
+                          ),
+                        );
+                      },
+                      child: Row(
+                        children: [
+                          CircleAvatar(
+                            radius: 16,
+                            backgroundImage: NetworkImage(
+                              'https://cdn.pixabay.com/photo/2023/01/10/13/07/flowers-7709737_1280.jpg',
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            'Toko Jaya',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                              fontFamily: 'Righteous',
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        Icon(Icons.star, color: Colors.amber, size: 18),
+                        const SizedBox(width: 4),
+                        Text(
+                          '4.9 | Terjual 120',
+                          style: TextStyle(fontSize: 13),
+                        ),
+                        const SizedBox(width: 4),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+
+              //BATAS
+
+              const SizedBox(height: 16),
+              //DESKRIPSI DAN BUTTON
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -119,7 +160,7 @@ class _ProductDetailState extends State<ProductDetail> {
                       fontSize: 20,
                     ),
                   ),
-                 Row(
+                  Row(
                     children: [
                       IconButton(
                         icon: const Icon(Icons.remove),
@@ -138,11 +179,10 @@ class _ProductDetailState extends State<ProductDetail> {
                         icon: const Icon(Icons.add),
                         onPressed: () {
                           productProvider.increment();
-                          
                         },
                       ),
                     ],
-                  )
+                  ),
                 ],
               ),
 
