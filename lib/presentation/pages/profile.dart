@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:e_mart_11bdg/presentation/widgets/bottom_bar.dart';
+import 'package:e_mart_11bdg/core/utils/shared_prefs.dart';
+import 'package:e_mart_11bdg/presentation/pages/login.dart';
+
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -235,8 +238,12 @@ class _ProfilePageState extends State<ProfilePage> {
                         ],
                       ),
                       child: GestureDetector(
-                        onTap: () {
-                          print('Logout Tapped');
+                        onTap: () async {
+                          await SharedPrefs.clearToken();
+                          Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(builder: (context) => const LoginPage()),
+                            (Route<dynamic> route) => false,
+                          );
                         },
                         child: Center(
                           // Ganti jadi Center biar langsung tengah

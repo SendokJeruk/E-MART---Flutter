@@ -1,7 +1,10 @@
 import 'package:e_mart_11bdg/core/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import '../widgets/loginAnimation.dart';
+import 'package:e_mart_11bdg/presentation/widgets/sosialButton.dart';
+import 'package:e_mart_11bdg/core/services/auth_services.dart';
+import 'package:e_mart_11bdg/presentation/pages/home.dart';
+import 'package:e_mart_11bdg/presentation/pages/register.dart';
 import 'package:e_mart_11bdg/data/controllers/loginAnimate.dart';
 import '../widgets/sosialButton.dart';
 import '../pages/home.dart';
@@ -17,57 +20,10 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   late LoginAnimationController animationController;
 
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  final AuthService _authService = AuthService();
-  bool _isLoading = false;
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
-  Future<void> _login() async {
-    final email = _emailController.text.trim();
-    final password = _passwordController.text.trim();
-
-    if (email.isEmpty || password.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Email dan Password wajib diisi')),
-      );
-      return;
-    }
-
-    setState(() => _isLoading = true);
-
-    try {
-      final User? user = await _authService.login(email, password);
-
-      if (!mounted) return;
-      setState(() => _isLoading = false);
-
-      if (user != null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Login berhasil, selamat datang ${user.name}')),
-        );
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const HomePage()),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Login gagal, periksa email dan password kamu!'),
-          ),
-        );
-      }
-    } catch (e) {
-      if (!mounted) return;
-      setState(() => _isLoading = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Terjadi kesalahan: $e')),
-      );
-    }
-  }
-
-  void _register() {
-    Navigator.pushNamed(context, '/register');
-  }
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -81,7 +37,38 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     _emailController.dispose();
     _passwordController.dispose();
     animationController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
     super.dispose();
+  }
+
+  void _handleLogin() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    final success = await AuthService().login(
+      emailController.text.trim(),
+      passwordController.text.trim(),
+    );
+
+    setState(() {
+      isLoading = false;
+    });
+
+    if (success) {
+      // Navigasi ke halaman Home
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage()),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Login gagal. Cek email atau password.'),
+        ),
+      );
+    }
   }
 
   @override
@@ -166,10 +153,12 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                         ],
                       ),
                       child: TextField(
-                        style: const TextStyle(fontSize: 12, fontFamily: 'Righteous'),
-                        controller: _emailController,
+                        controller: emailController,
                         keyboardType: TextInputType.emailAddress,
-                        textInputAction: TextInputAction.next,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontFamily: 'Righteous',
+                        ),
                         decoration: const InputDecoration(
                           hintText: 'Masukkan Email',
                           hintStyle: TextStyle(
@@ -197,10 +186,13 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                         ],
                       ),
                       child: TextField(
-                        style: const TextStyle(fontSize: 12, fontFamily: 'Righteous'),
-                        controller: _passwordController,
+
+                        controller: passwordController,
                         obscureText: true,
-                        textInputAction: TextInputAction.done,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontFamily: 'Righteous',
+                        ),
                         decoration: const InputDecoration(
                           hintText: 'Masukkan Password',
                           hintStyle: TextStyle(
@@ -213,11 +205,10 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    // ========= TOMBOL LOGIN YANG BENAR =========
                     GestureDetector(
-                      onTap: _isLoading ? null : _login,
+                      onTap: _isLoading ? null : _handleLogin,
                       child: Container(
-                        width: 120,
+                        width: 100,
                         padding: const EdgeInsets.symmetric(
                           horizontal: 30,
                           vertical: 12,
@@ -235,11 +226,14 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                           ],
                         ),
                         child: Center(
-                          child: _isLoading
+                          child: isLoading
                               ? const SizedBox(
-                                  height: 16,
                                   width: 16,
-                                  child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                                  height: 16,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                  ),
                                 )
                               : const Text(
                                   'LOGIN',
@@ -273,7 +267,11 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                               ),
                               const SizedBox(width: 6),
                               GestureDetector(
-                                onTap: _register,
+                                onTap: () {
+                                  Navigator.pushReplacement(
+                                    context, 
+                                    MaterialPageRoute(builder: (context) => const RegisterPage()));
+                                },
                                 child: const Text(
                                   "Register",
                                   style: TextStyle(

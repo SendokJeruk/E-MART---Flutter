@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:e_mart_11bdg/core/utils/shared_prefs.dart';
 import 'package:e_mart_11bdg/presentation/pages/home.dart';
 import 'package:e_mart_11bdg/data/controllers/animate.controllers.dart';
 import 'package:e_mart_11bdg/presentation/routes/routeTransition.dart';
@@ -21,10 +22,20 @@ class _SplashViewState extends State<SplashView> with SingleTickerProviderStateM
     _splashController.init(this);
 
     Future.delayed(const Duration(seconds: 2), () {
-      _splashController.startAnimation(() {
-        Navigator.of(context).pushReplacement(
-          FadeSlideRoute(page: const LoginPage()),
-        );
+      _splashController.startAnimation(() async {
+        final token = await SharedPrefs.getToken();
+
+        if (token != null && token.isNotEmpty) {
+          // Jika token ada, langsung ke HomePage
+          Navigator.of(context).pushReplacement(
+            FadeSlideRoute(page: const HomePage()),
+          );
+        } else {
+          // Jika tidak ada token, arahkan ke LoginPage
+          Navigator.of(context).pushReplacement(
+            FadeSlideRoute(page: const LoginPage()),
+          );
+        }
       });
     });
   }
