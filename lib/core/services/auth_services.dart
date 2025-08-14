@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../utils/constants.dart';
 import '../utils/shared_prefs.dart';
+import '../../data/models/User.dart';
 
 class AuthService {
   Future<bool> register({
@@ -87,4 +88,25 @@ class AuthService {
       return false;
     }
   }
+
+  Future<UserModel?> getProfile() async {
+  final token = await SharedPrefs.getToken();
+
+  final response = await http.get(
+    Uri.parse('${Constants.baseUrl}/profile'),
+    headers: {
+      'Authorization': 'Bearer $token',
+      'Accept': 'application/json',
+    },
+  );
+
+  if (response.statusCode == 200) {
+    final data = json.decode(response.body);
+    return UserModel.fromJson(data['data']);
+  } else {
+    print('Gagal mengambil data profil. Status: ${response.statusCode}');
+    return null;
+  }
+}
+
 }
