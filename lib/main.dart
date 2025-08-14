@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:e_mart_11bdg/presentation/pages/Profile.dart';
+import 'package:e_mart_11bdg/presentation/pages/Settings/settings.dart';
 import 'package:e_mart_11bdg/presentation/pages/home.dart';
 import 'package:e_mart_11bdg/presentation/pages/notifikasi.dart';
 import 'package:e_mart_11bdg/presentation/pages/payment.dart';
@@ -49,7 +50,7 @@ class MainApp extends StatelessWidget {
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-      home: const SplashView(),
+      home: const SettingsPage(),
     );
   }
 }
