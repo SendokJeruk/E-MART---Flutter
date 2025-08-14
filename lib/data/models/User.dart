@@ -1,40 +1,28 @@
-class User {
+class UserModel {
+  final int id;
   final String name;
   final String email;
-  final String password;
-  final String no_telp;
-  final String role;
-  final String? google_id;
-  final String? google_token;
-  final String? google_refresh_token;
-  final String? accessToken;
-  final String? tokenType;
+  final String noTelp;
+  final String? fotoProfil;
+  final String? namaRole;
 
-  User({
+  UserModel({
+    required this.id,
     required this.name,
     required this.email,
-    required this.password,
-    required this.no_telp,
-    required this.role,
-    this.google_id,
-    this.google_token,
-    this.google_refresh_token,
-    this.accessToken,
-    this.tokenType,
+    required this.noTelp,
+    this.fotoProfil,
+    this.namaRole,
   });
 
-  factory User.fromJson(Map<String, dynamic> json) {
-    return User(
+  factory UserModel.fromJson(Map<String, dynamic> json) {
+    return UserModel(
+      id: json['id'],
       name: json['name'],
       email: json['email'],
-      password: json['password'] ?? '',
-      no_telp: json['no_telp'] ?? '',
-      role: json['role'] ?? '',
-      google_id: json['google_id'],
-      google_token: json['google_token'],
-      google_refresh_token: json['google_refresh_token'],
-      accessToken: json['access_token'],
-      tokenType: json['token_type'],
+      noTelp: json['no_telp'],
+      fotoProfil: json['foto_profil'],
+      namaRole: json['nama_role'],
     );
   }
 }
