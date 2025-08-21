@@ -28,7 +28,7 @@ class ProdukTab extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ViewPage(),
+                  builder: (context) => ProdukTab(),
                 ),
               );
             },

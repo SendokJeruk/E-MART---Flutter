@@ -1,3 +1,4 @@
+import 'package:e_mart_11bdg/presentation/pages/home.dart';
 import 'package:flutter/material.dart';
 import 'package:e_mart_11bdg/presentation/pages/payment.dart';
 import 'package:e_mart_11bdg/presentation/pages/cart.dart';
@@ -105,7 +106,7 @@ class _ProdukDetailPersonState extends State<ProdukDetailPerson> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => PaymentPage(),
+                                builder: (context) => HomePage(),
                               ),
                             );
                           },

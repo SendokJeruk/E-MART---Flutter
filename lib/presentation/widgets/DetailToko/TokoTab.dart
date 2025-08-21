@@ -92,7 +92,7 @@ class _TokoTabState extends State<TokoTab> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => ViewPage()),
+                    MaterialPageRoute(builder: (context) => TokoTab()),
                   );
                 },
               );

@@ -179,7 +179,7 @@ class _CartPageState extends State<CartPage> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => PaymentPage()),
+                    MaterialPageRoute(builder: (context) => CartPage()),
                   );
                 },
                 style: ElevatedButton.styleFrom(

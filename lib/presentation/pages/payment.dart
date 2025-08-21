@@ -67,7 +67,7 @@ class _PaymentPageState extends State<PaymentPage> {
 
   @override
   Widget build(BuildContext context) {
-    final productProvider = Provider.of<PaymentProvider>(context);
+    final productProvider = Provider.of<ProductProvider>(context);
     final lokasiProvider = Provider.of<LocationProvider>(context);
     final screenWidth = MediaQuery.of(context).size.width;
 
@@ -135,7 +135,7 @@ class _PaymentPageState extends State<PaymentPage> {
                           ),
                         ),
                         Text(
-                          "Rp. ${productProvider.pricePerItem}",
+                          "Rp. 10000",
                           style: const TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.bold,
@@ -155,7 +155,7 @@ class _PaymentPageState extends State<PaymentPage> {
                               ),
                             ),
                             Text(
-                              "${productProvider.quantity}x",
+                              "1000",
                               style: const TextStyle(
                                 fontSize: 13,
                                 color: Colors.grey,
@@ -269,17 +269,17 @@ class _PaymentPageState extends State<PaymentPage> {
                     children: [
                       buildRow(
                         "Harga Per Produk",
-                        "Rp. ${productProvider.pricePerItem}",
+                        "Rp. 10000",
                       ),
-                      buildRow("Jumlah Produk", "${productProvider.quantity}x"),
+                      buildRow("Jumlah Produk", "1000x"),
                       buildRow(
                         "Biaya Layanan",
-                        "Rp. ${productProvider.serviceFee}",
+                        "Rp. 10000",
                       ),
                       const Divider(height: 30),
                       buildRow(
                         "Subtotal",
-                        "Rp. ${productProvider.subTotal}",
+                        "Rp. 10000",
                         bold: true,
                         color: const Color.fromARGB(255, 109, 20, 20),
                       ),

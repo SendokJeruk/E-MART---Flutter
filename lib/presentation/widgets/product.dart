@@ -31,41 +31,23 @@ class ProductDetail extends StatefulWidget {
 
 class _ProductDetailState extends State<ProductDetail> {
   bool showFullText = false;
-  int _quantity = 0;
-
-  void _increment() {
-    setState(() {
-      _quantity++;
-    });
-  }
-
-  void _decrement() {
-    setState(() {
-      if (_quantity > 0) {
-        _quantity--;
-      }
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
-    final productProvider = Provider.of<PaymentProvider>(context);
-
-    final String firstText =
-        widget.description.length > 100
-            ? widget.description.substring(0, 100)
-            : widget.description;
-    final String fullText =
-        widget.description.length > 100
-            ? widget.description.substring(100)
-            : '';
+    final screenHeight = MediaQuery.of(context).size.height;
+    final String firstText = widget.description.length > 100
+        ? widget.description.substring(0, 100)
+        : widget.description;
+    final String fullText = widget.description.length > 100
+        ? widget.description.substring(100)
+        : '';
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         buildNetworkImageWithFallback(
           imageUrl: widget.imageUrl,
-          height: 270,
+          height: screenHeight * 0.35,
           width: double.infinity,
           fit: BoxFit.cover,
         ),
@@ -74,145 +56,71 @@ class _ProductDetailState extends State<ProductDetail> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                widget.title,
-                style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+              Text(widget.title,
+                  style: const TextStyle(
+                      fontSize: 24, fontWeight: FontWeight.bold)),
               const SizedBox(height: 8),
-              Text(
-                widget.price,
-                style: const TextStyle(
-                  fontSize: 20,
-                  color: Colors.red,
-                  fontWeight: FontWeight.w900,
-                ),
-              ),
-
-              //BATAS AWAL BAGIAN TOKO
-
-              const SizedBox(height: 0),
-              Padding(
-                padding: const EdgeInsets.only(
-                  top: 12.0,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ProdukDetailPerson(),
-                          ),
-                        );
-                      },
-                      child: Row(
-                        children: [
-                          CircleAvatar(
-                            radius: 16,
-                            backgroundImage: NetworkImage(
-                              'https://cdn.pixabay.com/photo/2023/01/10/13/07/flowers-7709737_1280.jpg',
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            'Toko Jaya',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14,
-                              fontFamily: 'Righteous',
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        Icon(Icons.star, color: Colors.amber, size: 18),
-                        const SizedBox(width: 4),
-                        Text(
-                          '4.9 | Terjual 120',
-                          style: TextStyle(fontSize: 13),
-                        ),
-                        const SizedBox(width: 4),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-
-              //BATAS
-
-              const SizedBox(height: 16),
-              //DESKRIPSI DAN BUTTON
+              Text(widget.price,
+                  style: const TextStyle(
+                      fontSize: 20,
+                      color: Colors.red,
+                      fontWeight: FontWeight.w900)),
+              const SizedBox(height: 12),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    'Deskripsi Produk',
-                    style: TextStyle(
-                      fontFamily: 'Righteous',
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                    ),
+                  Row(
+                    children: [
+                      const CircleAvatar(
+                        radius: 16,
+                        backgroundImage: NetworkImage(
+                          'https://cdn.pixabay.com/photo/2023/01/10/13/07/flowers-7709737_1280.jpg',
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Text(widget.seller,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 14)),
+                    ],
                   ),
                   Row(
                     children: [
-                      IconButton(
-                        icon: const Icon(Icons.remove),
-                        onPressed: () {
-                          productProvider.decrement();
-                        },
-                      ),
-                      Text(
-                        '${productProvider.quantity}',
-                        style: const TextStyle(
-                          color: Color(0xFFBF3131),
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.add),
-                        onPressed: () {
-                          productProvider.increment();
-                        },
-                      ),
+                      const Icon(Icons.star, color: Colors.amber, size: 18),
+                      const SizedBox(width: 4),
+                      Text("${widget.rating} | Terjual ${widget.sold}",
+                          style: const TextStyle(fontSize: 13)),
                     ],
                   ),
                 ],
               ),
-
+              const SizedBox(height: 16),
+              const Text("Deskripsi Produk",
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Righteous')),
               const Divider(),
-              SizedBox(height: 4),
+              const SizedBox(height: 4),
               RichText(
                 text: TextSpan(
-                  style: TextStyle(color: Color.fromARGB(255, 117, 117, 117)),
+                  style: const TextStyle(color: Colors.grey),
                   children: [
                     TextSpan(
-                      text:
-                          showFullText
-                              ? widget.description
-                              : firstText + (fullText.isNotEmpty ? '...' : ''),
-                    ),
+                        text: showFullText
+                            ? widget.description
+                            : firstText +
+                                (fullText.isNotEmpty ? '...' : '')),
                     if (fullText.isNotEmpty)
                       TextSpan(
-                        text: showFullText ? 'Lihat Sedikit' : 'Selengkapnya',
-                        style: TextStyle(
-                          color: Color(0xFFBF3131),
-                          fontWeight: FontWeight.bold,
-                          decoration: TextDecoration.underline,
-                        ),
-                        recognizer:
-                            TapGestureRecognizer()
-                              ..onTap = () {
-                                setState(() {
-                                  showFullText = !showFullText;
-                                });
-                              },
+                        text:
+                            showFullText ? '  Lihat Sedikit' : '  Selengkapnya',
+                        style: const TextStyle(
+                            color: Color(0xFFBF3131),
+                            fontWeight: FontWeight.bold,
+                            decoration: TextDecoration.underline),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap =
+                              () => setState(() => showFullText = !showFullText),
                       ),
                   ],
                 ),

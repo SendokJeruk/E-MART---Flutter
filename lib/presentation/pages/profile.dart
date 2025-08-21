@@ -1,9 +1,14 @@
+import 'package:e_mart_11bdg/presentation/pages/Settings/settings.dart';
+import 'package:e_mart_11bdg/presentation/pages/editprofile.dart';
 import 'package:flutter/material.dart';
 import 'package:e_mart_11bdg/core/utils/shared_prefs.dart';
 import 'package:e_mart_11bdg/presentation/pages/login.dart';
 import 'package:e_mart_11bdg/presentation/widgets/bottom_bar.dart';
 import 'package:e_mart_11bdg/core/services/auth_services.dart';
+import 'package:e_mart_11bdg/core/services/profile_services.dart';
 import 'package:e_mart_11bdg/data/models/User.dart';
+import 'package:e_mart_11bdg/presentation/pages/editprofile.dart';
+// import 'package:e_mart_11bdg/presentation/pages/Settings/myAccount/accountSecurity/account_security.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -23,11 +28,90 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> fetchProfile() async {
-    final profileData = await AuthService().getProfile();
+    final profileData = await ProfileService().getProfile();
     setState(() {
       user = profileData;
       isLoading = false;
     });
+  }
+
+  Widget infoRow(String label, String? value) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          "$label :",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.red,
+            fontFamily: 'Righteous',
+          ),
+        ),
+        Flexible(
+          child: Text(
+            value ?? "-",
+            textAlign: TextAlign.right,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget actionRow(String label, IconData icon, {required VoidCallback onTap, double iconSize = 20}) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(8),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              label,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Color.fromARGB(255, 88, 88, 88),
+                fontFamily: 'Righteous',
+              ),
+            ),
+            Icon(icon, size: iconSize, color: const Color(0xFFBF3131)),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget actionButton(String text, VoidCallback onTap) {
+    return Container(
+      width: MediaQuery.of(context).size.width * 0.3,
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: Color(0xFFBF3131),
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2)),
+        ],
+      ),
+      child: GestureDetector(
+        onTap: onTap,
+        child: Center(
+          child: Text(
+            text,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+              fontFamily: 'Righteous',
+              fontSize: 10,
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -50,204 +134,179 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         ),
       ),
-      body: isLoading
-          ? Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-              child: Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    children: [
-                      // FOTO PROFILE
-                      Container(
-                        padding: EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: const Color(0xFFBF3131),
-                            width: 5,
+      body:
+          isLoading
+              ? Center(child: CircularProgressIndicator())
+              : SingleChildScrollView(
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      children: [
+                        // FOTO PROFILE
+                        Container(
+                          padding: EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: const Color(0xFFBF3131),
+                              width: 5,
+                            ),
                           ),
-                        ),
-                        child: ClipOval(
-                          child: Image.network(
-                            user?.fotoProfil ??
-                                'https://via.placeholder.com/150',
-                            width: 110,
-                            height: 110,
-                            fit: BoxFit.cover,
-                            errorBuilder: (_, __, ___) => Container(
+                          child: ClipOval(
+                            child: Image.network(
+                              user?.fotoProfil ??
+                                  'https://via.placeholder.com/150',
                               width: 110,
                               height: 110,
-                              color: Colors.grey.shade300,
-                              child: Icon(Icons.broken_image, size: 40),
+                              fit: BoxFit.cover,
+                              errorBuilder:
+                                  (_, __, ___) => Container(
+                                    width: 110,
+                                    height: 110,
+                                    color: Colors.grey.shade300,
+                                    child: Icon(Icons.broken_image, size: 40),
+                                  ),
                             ),
                           ),
                         ),
-                      ),
-                      SizedBox(height: 10),
-                      Text(
-                        user?.name ?? '',
-                        style: TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'Righteous',
-                          color: Color(0xFFBF3131),
+                        SizedBox(height: 10),
+                        Text(
+                          user?.name ?? '',
+                          style: TextStyle(
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Righteous',
+                            color: Color(0xFFBF3131),
+                          ),
                         ),
-                      ),
-                      Text(
-                        user?.email ?? '',
-                        style: TextStyle(
-                          fontFamily: 'Righteous',
-                          fontSize: 14,
-                          color: Colors.grey[700],
+                        Text(
+                          user?.email ?? '',
+                          style: TextStyle(
+                            fontFamily: 'Righteous',
+                            fontSize: 14,
+                            color: Colors.grey[700],
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 20),
+                        SizedBox(height: 20),
 
-                      // INFORMASI USER
-                      Container(
-                        width: screenWidth * 0.9,
-                        padding: EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black12,
-                              blurRadius: 4,
-                              offset: Offset(0, 2),
-                            ),
-                          ],
+                        // INFORMASI USER
+                        Container(
+                          width: screenWidth * 0.9,
+                          padding: EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black12,
+                                blurRadius: 4,
+                                offset: Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              infoRow("Nama Lengkap", user?.name),
+                              Divider(color: Colors.white),
+                              infoRow("Email", user?.email),
+                              Divider(color: Colors.white),
+                              infoRow("No. Telp", user?.noTelp ?? "-"),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 10,
+                                ),
+                                child: Divider(color: Colors.red),
+                              ),
+                              actionRow(
+                                "Dompet Saya",
+                                Icons.account_balance_wallet,
+                                iconSize: 20,
+                                onTap: () {
+                                  if (user != null) {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => EditProfilePage(user: user!),
+                                      ),
+                                    );
+                                  } else {
+                                    // Bisa tambahkan snackbar/toast kalau data user belum siap
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(content: Text("Data profil belum dimuat")),
+                                    );
+                                  }
+                                },
+                              ),
+                              Divider(color: Colors.white),
+                              actionRow(
+                                "Pesanan Saya",
+                                Icons.shopping_bag,
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => const ProfilePage(),
+                                    ),
+                                  );
+                                },
+                              ),
+                              Divider(color: Colors.white),
+                              actionRow(
+                                "Pengaturan",
+                                Icons.settings,
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => const SettingsPage(),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
                         ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+
+                        // GARIS PEMBATAS
+                        SizedBox(height: 16),
+                        Container(
+                          width: screenWidth,
+                          height: 4,
+                          margin: EdgeInsets.symmetric(horizontal: 12),
+                          decoration: BoxDecoration(
+                            color: Color(0xFFBF3131),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+
+                        // BUTTONS
+                        SizedBox(height: 12),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            infoRow("Nama Lengkap", user?.name),
-                            Divider(),
-                            infoRow("Email", user?.email),
-                            Divider(),
-                            infoRow("No. Telp", user?.noTelp ?? "-"),
-                            Divider(),
-                            actionRow("Dompet Saya", Icons.account_balance_wallet),
-                            Divider(),
-                            actionRow("Pesanan Saya", Icons.shopping_bag),
-                            Divider(),
-                            actionRow("Pengaturan", Icons.settings),
+                            actionButton("LOG OUT", () async {
+                              await SharedPrefs.clearToken();
+                              Navigator.of(context).pushAndRemoveUntil(
+                                MaterialPageRoute(
+                                  builder: (_) => const LoginPage(),
+                                ),
+                                (route) => false,
+                              );
+                            }),
+                            SizedBox(width: 10),
+                            actionButton("SWITCH ACCOUNT", () {
+                              print("Switch account tapped");
+                            }),
                           ],
                         ),
-                      ),
-
-                      // GARIS PEMBATAS
-                      SizedBox(height: 16),
-                      Container(
-                        width: screenWidth,
-                        height: 4,
-                        margin: EdgeInsets.symmetric(horizontal: 12),
-                        decoration: BoxDecoration(
-                          color: Color(0xFFBF3131),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-
-                      // BUTTONS
-                      SizedBox(height: 12),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          actionButton("LOG OUT", () async {
-                            await SharedPrefs.clearToken();
-                            Navigator.of(context).pushAndRemoveUntil(
-                              MaterialPageRoute(builder: (_) => const LoginPage()),
-                              (route) => false,
-                            );
-                          }),
-                          SizedBox(width: 10),
-                          actionButton("SWITCH ACCOUNT", () {
-                            print("Switch account tapped");
-                          }),
-                        ],
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
       bottomNavigationBar: BottomBar(currentIndex: 4),
-    );
-  }
-
-  Widget infoRow(String label, String? value) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          "$label :",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
-        ),
-        Flexible(
-          child: Text(
-            value ?? "-",
-            textAlign: TextAlign.right,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget actionRow(String label, IconData icon) {
-    return GestureDetector(
-      onTap: () {
-        print('$label tapped');
-      },
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            label,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
-          ),
-          Icon(icon, color: const Color(0xFFBF3131)),
-        ],
-      ),
-    );
-  }
-
-  Widget actionButton(String text, VoidCallback onTap) {
-    return Container(
-      width: MediaQuery.of(context).size.width * 0.3,
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: Color(0xFFBF3131),
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 4,
-            offset: Offset(0, 2),
-          ),
-        ],
-      ),
-      child: GestureDetector(
-        onTap: onTap,
-        child: Center(
-          child: Text(
-            text,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-              fontFamily: 'Righteous',
-              fontSize: 10,
-            ),
-          ),
-        ),
-      ),
     );
   }
 }
