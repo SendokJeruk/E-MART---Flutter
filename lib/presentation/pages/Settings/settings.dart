@@ -1,3 +1,6 @@
+import 'package:e_mart_11bdg/presentation/pages/Settings/myAccount/accountSecurity/account_security.dart';
+import 'package:e_mart_11bdg/presentation/pages/Settings/myAccount/accountAddress/myAddress.dart';
+import 'package:e_mart_11bdg/presentation/pages/Settings/userSettings/Notification/listNotif.dart';
 import 'package:e_mart_11bdg/presentation/pages/paymentMethod.dart';
 import 'package:flutter/material.dart';
 
@@ -62,13 +65,13 @@ class SettingsPage extends StatelessWidget {
           menuItem("Akun & Keamanan", onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (_) => const PaymentMethod()),
+              MaterialPageRoute(builder: (_) => const AccountSecurity()),
             );
           }),
           menuItem("Alamat Saya", onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (_) => const PaymentMethod()),
+              MaterialPageRoute(builder: (_) => const MyaddressPage()),
             );
           }),
 
@@ -76,7 +79,7 @@ class SettingsPage extends StatelessWidget {
           menuItem("Notifikasi", onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (_) => const PaymentMethod()),
+              MaterialPageRoute(builder: (_) => const NotificationList()),
             );
           }),
           menuItem("Blokir Pengguna"),

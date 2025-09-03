@@ -206,6 +206,7 @@ class _ProdukDetailPersonState extends State<ProdukDetailPerson> {
               borderRadius: BorderRadius.circular(12),
             ),
           ),
+          
           SizedBox(height: 20),
           Consumer<TabProvider>(
             builder: (context, tabProvider, _) {
