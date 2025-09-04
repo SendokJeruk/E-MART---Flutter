@@ -22,6 +22,8 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -36,7 +38,7 @@ class ProductCard extends StatelessWidget {
             ),
           ],
         ),
-        margin: EdgeInsets.all(8),
+        margin: const EdgeInsets.all(8),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
@@ -44,77 +46,73 @@ class ProductCard extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
-                child: Image.network(
-                  imageUrl,
-                  height: 100,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                  loadingBuilder: (context, child, loadingProgress) {
-                    if (loadingProgress == null) return child;
-                    return Container(
-                      height: 100,
-                      width: double.infinity,
-                      color: Colors.grey.shade200,
-                      child: Center(
-                        child: CircularProgressIndicator(
-                          value:
-                              loadingProgress.expectedTotalBytes != null
-                                  ? loadingProgress.cumulativeBytesLoaded /
-                                      (loadingProgress.expectedTotalBytes ?? 1)
-                                  : null,
-                        ),
-                      ),
-                    );
-                  },
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      height: 100,
-                      width: double.infinity,
-                      color: Colors.grey.shade300,
-                      child: Center(
-                        child: Icon(
-                          Icons.broken_image,
-                          color: Colors.grey,
-                          size: 40,
-                        ),
-                      ),
-                    );
-                  },
+                child: imageUrl.isNotEmpty
+                    ? Image.network(
+                        imageUrl,
+                        height: screenWidth * 0.25,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return Container(
+                            height: 100,
+                            width: double.infinity,
+                            color: Colors.grey.shade200,
+                            child: Center(
+                              child: CircularProgressIndicator(
+                                value: loadingProgress.expectedTotalBytes != null
+                                    ? loadingProgress.cumulativeBytesLoaded /
+                                        (loadingProgress.expectedTotalBytes ?? 1)
+                                    : null,
+                              ),
+                            ),
+                          );
+                        },
+                        errorBuilder: (context, error, stackTrace) {
+                          return _buildImagePlaceholder(context);
+                        },
+                      )
+                    : _buildImagePlaceholder(context),
+              ),
+              const SizedBox(height: 8),
+              const Divider(height: 1),
+              Expanded(
+                child: Text(
+                  title.isNotEmpty ? title : "Produk",
+                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
-              SizedBox(height: 8),
-              Divider(height: 1),
+              const SizedBox(height: 4),
               Text(
-                title,
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+                price.isNotEmpty ? price : "Rp 0",
+                style: const TextStyle(fontSize: 13, color: Colors.redAccent, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 4),
+              const SizedBox(height: 4),
               Text(
-                price,
-                style: TextStyle(fontSize: 13, color: Colors.redAccent, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 4),
-              Text(
-                '$sold terjual',
+                '${sold.isNotEmpty ? sold : "0"} terjual',
                 style: TextStyle(fontSize: 11, color: Colors.grey[700]),
               ),
-              SizedBox(height: 6),
+              const SizedBox(height: 6),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    seller,
-                    style: TextStyle(fontSize: 11, color: Colors.grey[800]),
+                  Expanded(
+                    child: Text(
+                      seller.isNotEmpty ? seller : "Toko",
+                      style: TextStyle(fontSize: 11, color: Colors.grey[800]),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                    ),
                   ),
                   Row(
                     children: [
-                      Icon(Icons.star, size: 14, color: Colors.orange),
-                      SizedBox(width: 2),
+                      const Icon(Icons.star, size: 14, color: Colors.orange),
+                      const SizedBox(width: 2),
                       Text(
-                        rating.toStringAsFixed(1),
-                        style: TextStyle(fontSize: 11),
+                        rating > 0 ? rating.toStringAsFixed(1) : "0.0",
+                        style: const TextStyle(fontSize: 11),
                       ),
                     ],
                   ),
@@ -122,6 +120,22 @@ class ProductCard extends StatelessWidget {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildImagePlaceholder(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    return Container(
+      height: screenWidth * 0.25,
+      width: double.infinity,
+      color: Colors.grey.shade300,
+      child: const Center(
+        child: Icon(
+          Icons.broken_image,
+          color: Colors.grey,
+          size: 40,
         ),
       ),
     );

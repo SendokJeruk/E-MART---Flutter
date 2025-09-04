@@ -21,12 +21,12 @@ import 'package:e_mart_11bdg/presentation/provider/location_provider.dart';
 import 'package:e_mart_11bdg/presentation/pages/cart.dart';
 import 'package:e_mart_11bdg/presentation/provider/myOrderProvider.dart';
 import 'package:e_mart_11bdg/presentation/provider/product_provider.dart';
-import 'package:e_mart_11bdg/presentation/provider/productCard_provider.dart';
+import 'package:e_mart_11bdg/presentation/provider/productList_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'presentation/widgets/notification_provider.dart';
 import 'presentation/pages/login.dart';
-import './presentation/pages/view.dart';
+import 'presentation/pages/view.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'presentation/pages/DetailToko/produk.dart';
 import 'presentation/provider/tab_provider.dart';
@@ -38,11 +38,12 @@ import 'presentation/provider/detailOrderProvider.dart';
 import '../../presentation/pages/Transaksi/detailTransaksi.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => NotificationProvider()),
-        ChangeNotifierProvider(create: (context) => PaymentProvider()),
+        // ChangeNotifierProvider(create: (context) => PaymentProvider()),
         ChangeNotifierProvider(create: (context) => LocationProvider()),
         ChangeNotifierProvider(create: (_) => ProductProvider()),
         ChangeNotifierProvider(create: (_) => TabProvider()),
@@ -75,7 +76,7 @@ class MainApp extends StatelessWidget {
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-      home: const MyaddressPage(), // ⬅️ Page Detail Transaksi
+      home: const SplashView(),
     );
   }
 }

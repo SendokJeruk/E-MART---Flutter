@@ -1,3 +1,5 @@
+
+import 'package:e_mart_11bdg/presentation/pages/Settings/settings.dart';
 import 'package:e_mart_11bdg/presentation/pages/Profile/orderList.dart';
 import 'package:e_mart_11bdg/presentation/pages/Settings/settings.dart';
 import 'package:e_mart_11bdg/presentation/pages/Transaksi/transHistory.dart';
@@ -6,7 +8,9 @@ import 'package:e_mart_11bdg/core/utils/shared_prefs.dart';
 import 'package:e_mart_11bdg/presentation/pages/login.dart';
 import 'package:e_mart_11bdg/presentation/widgets/bottom_bar.dart';
 import 'package:e_mart_11bdg/core/services/auth_services.dart';
+import 'package:e_mart_11bdg/core/services/profile_services.dart';
 import 'package:e_mart_11bdg/data/models/User.dart';
+import 'package:e_mart_11bdg/presentation/pages/editprofile.dart';
 import 'package:e_mart_11bdg/presentation/pages/Settings/myAccount/accountSecurity/account_security.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -27,7 +31,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> fetchProfile() async {
-    final profileData = await AuthService().getProfile();
+    final profileData = await ProfileService().getProfile();
     setState(() {
       user = profileData;
       isLoading = false;
@@ -155,7 +159,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           child: ClipOval(
                             child: Image.network(
                               user?.fotoProfil ??
-                                  'https://images.pexels.com/photos/14653174/pexels-photo-14653174.jpeg',
+                                  'https://via.placeholder.com/150',
                               width: 110,
                               height: 110,
                               fit: BoxFit.cover,

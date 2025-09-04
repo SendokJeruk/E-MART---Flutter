@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:e_mart_11bdg/presentation/widgets/bottom_bar.dart';
-import 'package:e_mart_11bdg/presentation/provider/productCard_provider.dart';
+import 'package:e_mart_11bdg/presentation/provider/product_provider.dart';
 import 'package:e_mart_11bdg/presentation/widgets/card.dart'; 
+import 'package:e_mart_11bdg/presentation/pages/view.dart';
 
 class TrendingPage extends StatefulWidget {
   const TrendingPage({super.key});
@@ -39,7 +40,7 @@ class _TrendingPageState extends State<TrendingPage> {
                     children: [
                       Expanded(
                         child: Container(
-                          height: 35,
+                          height: screenWidth * 0.09,
                           padding: EdgeInsets.symmetric(horizontal: 12),
                           decoration: BoxDecoration(
                             color: Colors.white,
@@ -63,25 +64,24 @@ class _TrendingPageState extends State<TrendingPage> {
                       ),
                       SizedBox(width: screenWidth * 0.02),
                       Container(
-                        height: 35,
-                        width: 35,
+                        height: screenWidth * 0.09,
+                        width: screenWidth * 0.09,
                         decoration: BoxDecoration(
                           color: Colors.white,
                           shape: BoxShape.circle,
                         ),
                         child: IconButton(
-                          icon: Icon(
-                            Icons.shopping_cart,
-                            color: Color(0xFFBF3131),
+                            icon: Icon(
+                              Icons.shopping_cart, color: Color(0xFFBF3131)
+                              ),
+                              iconSize: screenWidth * 0.05, 
+                              onPressed: () {},
                           ),
-                          iconSize: 21,
-                          onPressed: () {},
                         ),
-                      ),
                       SizedBox(width: screenWidth * 0.02),
                       Container(
-                        height: 35,
-                        width: 35,
+                        height: screenWidth * 0.09,
+                        width: screenWidth * 0.09,
                         decoration: BoxDecoration(
                           color: Colors.white,
                           shape: BoxShape.circle,
@@ -90,9 +90,9 @@ class _TrendingPageState extends State<TrendingPage> {
                           icon: Icon(
                             Icons.filter_list,
                             color: Color(0xFFBF3131),
-                          ),
-                          iconSize: 21,
-                          onPressed: () {},
+                            ),
+                            iconSize: screenWidth * 0.05,
+                            onPressed: () {},
                         ),
                       ),
                     ],
@@ -108,39 +108,52 @@ class _TrendingPageState extends State<TrendingPage> {
 
       body: Consumer<ProductProvider>(
         builder: (context, productProvider, _) {
-          final trending = productProvider.trendingProducts;
+          final trending = productProvider.products;
 
           if (trending.isEmpty) {
             return Center(child: Text('Tidak ada produk trending'));
           }
 
-          return GridView.builder(
-            padding: EdgeInsets.all(5),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 1,
-              mainAxisSpacing: 2,
-              childAspectRatio: 
-                  MediaQuery.of(context).size.width /
-                  (MediaQuery.of(context).size.height / 1.83),
-            ),
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),  
-            itemCount: trending.length,
-            itemBuilder: (context, index) {
-              final product = trending[index];
-              return ProductCard(
-                imageUrl: product.imageUrl,
-                title: product.title,
-                price: product.price,
-                sold: product.sold,
-                seller: product.seller,
-                rating: product.rating,
-                onTap: () {
-                  // TODO: bisa navigasi ke halaman detail produk
+          return SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: GridView.builder(
+                padding: EdgeInsets.all(5),
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: trending.length,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 1,
+                  mainAxisSpacing: 2,
+                  childAspectRatio: screenWidth / (screenHeight / 1.83),
+                ),
+                itemBuilder: (context, index) {
+                  final product = trending[index];
+                return ProductCard(
+                  imageUrl: product['foto_cover'] ??
+                      ((product['foto'] is List && product['foto'].isNotEmpty)
+                          ? product['foto'][0]['foto']
+                          : ''),
+                  title: product['nama_product'] ?? '',
+                  price: "Rp ${product['harga'] ?? '0'}",
+                  sold: (product['sold'] ?? product['stock'] ?? 0).toString(),
+                  seller: (product['user']?['toko']?['nama_toko']) ??
+                      (product['user']?['name']) ??
+                      'Toko',
+                  rating: double.tryParse(product['average_rating'].toString()) ?? 0.0,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => ViewPage(product: product),
+                      ),
+                    );
+                  },
+                );
                 },
-              );
-            },
+              ),
+            ),
           );
         },
       ),

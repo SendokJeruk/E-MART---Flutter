@@ -1,24 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:e_mart_11bdg/core/services/product_services.dart';
 
-class PaymentProvider with ChangeNotifier {
-  int _quantity = 1;
-  final int _pricePerItem = 100000;
-  final int _serviceFee = 5000;
+class ProductProvider with ChangeNotifier {
+  final ProductService _productService = ProductService();
 
-  int get quantity => _quantity;
-  int get pricePerItem => _pricePerItem;
-  int get serviceFee => _serviceFee;
-  int get subTotal => (_pricePerItem * _quantity) + _serviceFee;
+  List<dynamic> _products = [];
+  List<dynamic> get products => _products;
 
-  void increment() {
-    _quantity++;
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
+
+  Future<void> fetchProducts() async {
+    _isLoading = true;
     notifyListeners();
-  }
 
-  void decrement() {
-    if (_quantity > 1) {
-      _quantity--;
-      notifyListeners();
+    try {
+      _products = await _productService.getProducts();
+    } catch (e) {
+      print("Error fetchProducts: $e");
     }
+
+    _isLoading = false;
+    notifyListeners();
   }
 }
