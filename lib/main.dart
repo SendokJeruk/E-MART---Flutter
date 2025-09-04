@@ -75,7 +75,7 @@ class MainApp extends StatelessWidget {
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-      home: const SplashView(), // ⬅️ Page Detail Transaksi
+      home: const MyaddressPage(), // ⬅️ Page Detail Transaksi
     );
   }
 }

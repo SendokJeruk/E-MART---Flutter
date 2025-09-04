@@ -88,63 +88,84 @@ class AddressService {
 
   /// Ambil "domestics" — beberapa repo/endpoint menyimpan kombinasi kode/domestik/zip
   /// dalam file villages/{something}.json. Kita coba fetch that endpoint.
-  Future<List<Map<String, dynamic>>> getDomestics(String subdistrictId) async {
-    try {
-      final res = await http.get(
-        Uri.parse("$baseUrl/rajaongkir/domestic?search=$subdistrictId"),
-      );
-      if (res.statusCode == 200) {
-        final List data = jsonDecode(res.body)['data'] ?? [];
-        return data.map<Map<String, dynamic>>((e) {
-          return {
-            "id": e['id'],
-            "name": e['name'],
-            "kode_domestik": e['id'], // kode unik domestik
-            "zip_code":
-                e['zip_code']?.toString() ??
-                "", // <-- langsung ambil zip_code di sini
-          };
-        }).toList();
+  Future<List<Map<String, dynamic>>> searchDomestics(String searchQuery) async {
+  try {
+    final res = await http.get(
+      Uri.parse("${Constants.baseUrl}/rajaongkir/domestic?search=$searchQuery"),
+      headers: {'Accept': 'application/json'},
+    );
+    if (res.statusCode == 200) {
+      final body = jsonDecode(res.body);
+      final List data = body['data'] ?? [];
+      return data.map<Map<String, dynamic>>((e) {
+        return {
+          "id": e['id'],
+          "name": e['name'],
+          "kode_domestik": e['id'],
+          "zip_code": e['zip_code']?.toString() ?? "",
+        };
+      }).toList();
+    }
+  } catch (e) {
+    print("Error searchDomestics: $e");
+  }
+  return [];
+}
+
+  Future<http.Response> saveAddress(Map<String, dynamic> addressData) async {
+  final token = await SharedPrefs.getToken();
+  if (token == null) {
+    throw Exception("Token tidak tersedia, user belum login");
+  }
+
+  final response = await http.post(
+    Uri.parse("${Constants.baseUrl}/alamat"),
+    headers: {
+      'Authorization': 'Bearer $token',
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: jsonEncode(addressData),
+  );
+
+  // Debug log
+  print("SAVE ADDRESS STATUS: ${response.statusCode}");
+  print("SAVE ADDRESS BODY: ${response.body}");
+
+  return response; // <--- ganti, bukan bool lagi
+}
+
+Future<List<Map<String, dynamic>>> getAddresses() async {
+  final token = await SharedPrefs.getToken();
+  if (token == null) return [];
+
+  final response = await http.get(
+    Uri.parse("${Constants.baseUrl}/alamat"),
+    headers: {
+      'Authorization': 'Bearer $token',
+      'Accept': 'application/json',
+    },
+  );
+
+  print("DEBUG STATUS: ${response.statusCode}");
+  print("DEBUG BODY: ${response.body}");
+
+  if (response.statusCode == 200) {
+    final data = jsonDecode(response.body);
+
+    if (data is Map && data.containsKey('data')) {
+      final innerData = data['data'];
+      if (innerData is Map && innerData.containsKey('data')) {
+        // ✅ kasus pagination Laravel (pakai resource collection)
+        return List<Map<String, dynamic>>.from(innerData['data']);
+      } else if (innerData is List) {
+        // ✅ kasus data langsung array
+        return List<Map<String, dynamic>>.from(innerData);
       }
-    } catch (e) {
-      print("Error getDomestics: $e");
+    } else if (data is List) {
+      return List<Map<String, dynamic>>.from(data);
     }
-    return [];
   }
-
-  Future<bool> saveAddress(Map<String, dynamic> addressData) async {
-    final token = await SharedPrefs.getToken();
-    if (token == null) return false;
-
-    final response = await http.post(
-      Uri.parse("${Constants.baseUrl}/addresses"),
-      headers: {
-        'Authorization': 'Bearer $token',
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode(addressData),
-    );
-
-    print("SAVE ADDRESS STATUS: ${response.statusCode}");
-    print("SAVE ADDRESS BODY: ${response.body}");
-
-    return response.statusCode == 201;
-  }
-
-  Future<List<Map<String, dynamic>>> getAddresses() async {
-    final token = await SharedPrefs.getToken();
-    if (token == null) return [];
-
-    final response = await http.get(
-      Uri.parse("${Constants.baseUrl}/addresses"),
-      headers: {'Authorization': 'Bearer $token', 'Accept': 'application/json'},
-    );
-
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      return List<Map<String, dynamic>>.from(data['data']);
-    }
-    return [];
-  }
+  return [];
+}
 }
