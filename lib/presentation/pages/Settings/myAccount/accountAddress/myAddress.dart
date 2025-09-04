@@ -3,8 +3,21 @@ import 'package:e_mart_11bdg/presentation/provider/addressProvider.dart';
 import 'package:provider/provider.dart';
 import 'package:e_mart_11bdg/presentation/pages/Settings/myAccount/accountAddress/addAddress.dart';
 
-class MyaddressPage extends StatelessWidget {
+class MyaddressPage extends StatefulWidget {
   const MyaddressPage({super.key});
+
+  @override
+  State<MyaddressPage> createState() => _MyaddressPageState();
+}
+
+class _MyaddressPageState extends State<MyaddressPage> {
+  @override
+  void initState() {
+    super.initState();
+    // panggil provider saat halaman dibuka
+    Future.microtask(() =>
+        context.read<AddressProvider>().loadAddressesFromApi());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +43,7 @@ class MyaddressPage extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (_) => AddAddressPage(),
+                  builder: (_) => const AddAddressPage(),
                 ),
               );
             },
@@ -38,22 +51,26 @@ class MyaddressPage extends StatelessWidget {
         ],
       ),
       body: alamatList.isEmpty
-          ? ListView(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(16.0),
-                  child: const Text(
-                    "Daftar alamat Anda akan ditampilkan di sini.",
-                    style: TextStyle(fontSize: 16, color: Colors.grey),
-                  ),
-                ),
-              ],
+          ? const Center(
+              child: CircularProgressIndicator(), // loading indicator
             )
           : ListView.builder(
               itemCount: alamatList.length,
               padding: const EdgeInsets.all(16),
               itemBuilder: (context, index) {
                 final alamat = alamatList[index];
+
+                final prov = alamat['province_name'] ?? '';
+                final city = alamat['city_name'] ?? '';
+                final dist = alamat['district_name'] ?? '';
+                final subd = alamat['subdistrict_name'] ?? '';
+                final zip = alamat['zip_code'] ?? '';
+                final detail = alamat['detail_alamat'] ?? '';
+
+                final fullAddress =
+                    "$subd, $dist, $city, $prov${zip.isNotEmpty ? " ($zip)" : ""}"
+                    "${detail.isNotEmpty ? "\nDetail: $detail" : ""}";
+
                 return Container(
                   margin: const EdgeInsets.only(bottom: 16),
                   padding: const EdgeInsets.all(12),
@@ -71,55 +88,16 @@ class MyaddressPage extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Nama + Mini Address + Primary
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: Text(
-                              "${alamat['name']} - ${alamat['miniAddress']}",
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                                color: Color(0xFFBF3131),
-                                fontFamily: 'Righteous',
-                              ),
-                            ),
-                          ),
-                          if (alamat['isPrimary'] == 'true')
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 4),
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                    color: const Color(0xFFBF3131), width: 1),
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                              child: const Text(
-                                "[Primary]",
-                                style: TextStyle(
-                                  color: Color(0xFFBF3131),
-                                  fontFamily: 'Righteous',
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ),
-                        ],
-                      ),
-                      const SizedBox(height: 4),
-
-                      // Nomor HP
                       Text(
-                        alamat['phone'] ?? '',
+                        alamat['label'] ?? 'Alamat',
                         style: const TextStyle(
-                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
                           color: Color(0xFFBF3131),
-                          fontWeight: FontWeight.w500,
+                          fontFamily: 'Righteous',
                         ),
                       ),
-                      const SizedBox(height: 8),
-
-                      // Icon lokasi + alamat lengkap
+                      const SizedBox(height: 6),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -128,7 +106,7 @@ class MyaddressPage extends StatelessWidget {
                           const SizedBox(width: 6),
                           Expanded(
                             child: Text(
-                              alamat['fullAddress'] ?? '',
+                              fullAddress,
                               style: const TextStyle(
                                 fontSize: 14,
                                 color: Colors.grey,
