@@ -1,10 +1,48 @@
-import 'package:e_mart_11bdg/core/services/rajaongkir_service.dart';
 import 'package:e_mart_11bdg/presentation/pages/paymentMethod.dart';
 import 'package:e_mart_11bdg/presentation/provider/location_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:e_mart_11bdg/presentation/provider/product_provider.dart';
 
+// === PAGE UNTUK PILIH ALAMAT ===
+// (contoh, bisa kamu pindah ke file MyAddressPage.dart)
+class MyAddressPage extends StatelessWidget {
+  final List<String> addresses = [
+    "Jl. Sukarno Hatta No. 10",
+    "Jl. Asia Afrika No. 20",
+    "Jl. Cihampelas No. 30",
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: const Color(0xFFBF3131),
+        foregroundColor: Colors.white,
+        title: const Text(
+          "Pilih Alamat",
+          style: TextStyle(fontFamily: 'Righteous'),
+        ),
+      ),
+      body: ListView.builder(
+        itemCount: addresses.length,
+        itemBuilder: (context, index) {
+          return Card(
+            margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            child: ListTile(
+              title: Text(addresses[index]),
+              onTap: () {
+                Navigator.pop(context, addresses[index]); // return alamat
+              },
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+// === PAYMENT PAGE ===
 class PaymentPage extends StatefulWidget {
   const PaymentPage({super.key});
 
@@ -13,32 +51,7 @@ class PaymentPage extends StatefulWidget {
 }
 
 class _PaymentPageState extends State<PaymentPage> {
-  final RajaOngkirService rajaOngkir = RajaOngkirService();
-  List<dynamic> destinationData = [];
-  bool isLoadingDestinations = true;
-
   String? selectedPaymentMethod;
-
-  @override
-  void initState() {
-    super.initState();
-    fetchDestinationData();
-  }
-
-  Future<void> fetchDestinationData() async {
-    try {
-      final result = await rajaOngkir.getDestinations();
-      setState(() {
-        destinationData = result;
-        isLoadingDestinations = false;
-      });
-    } catch (e) {
-      debugPrint('Error fetching destinations: $e');
-      setState(() {
-        isLoadingDestinations = false;
-      });
-    }
-  }
 
   Widget buildRow(
     String title,
@@ -186,7 +199,7 @@ class _PaymentPageState extends State<PaymentPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    "Pilih Alamat Pengiriman",
+                    "Alamat Pengiriman",
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -195,45 +208,48 @@ class _PaymentPageState extends State<PaymentPage> {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  if (isLoadingDestinations)
-                    const CircularProgressIndicator()
-                  else
-                    DropdownButtonFormField<String>(
-                      value:
-                          destinationData.any(
-                                (item) =>
-                                    item['label'] == lokasiProvider.address,
-                              )
-                              ? lokasiProvider.address
-                              : null,
-                          items:
-                          destinationData.map<DropdownMenuItem<String>>((item) {
-                            final label = item['label'] ?? 'Tanpa Nama';
-                            return DropdownMenuItem<String>(
-                              value: item['label'],
-                              child: Text(
-                                item['label'],
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
+                  GestureDetector(
+                    onTap: () async {
+                      final selectedAddress = await Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => MyAddressPage()),
+                      );
+                      if (selectedAddress != null) {
+                        lokasiProvider.setManualAddress(selectedAddress);
+                      }
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              lokasiProvider.address.isNotEmpty
+                                  ? lokasiProvider.address
+                                  : "Pilih Alamat",
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: lokasiProvider.address.isEmpty
+                                    ? Colors.grey
+                                    : Colors.black,
                               ),
-                            );
-                          }).toList(),
-                      onChanged: (value) {
-                        lokasiProvider.setManualAddress(value!);
-                      },
-                      isExpanded: true,
-                      decoration: InputDecoration(
-                        labelText: 'Pilih Lokasi',
-                        contentPadding: const EdgeInsets.symmetric(horizontal:5, vertical:5),
-                      )
+                            ),
+                          ),
+                          const Icon(Icons.chevron_right),
+                        ],
+                      ),
                     ),
+                  ),
                   const SizedBox(height: 16),
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                    child: Text(
-                      "Alamat Terpilih:",
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
+                  const Text(
+                    "Alamat Terpilih:",
+                    style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   Text(lokasiProvider.address),
                 ],
@@ -267,15 +283,9 @@ class _PaymentPageState extends State<PaymentPage> {
                   const SizedBox(height: 30),
                   Column(
                     children: [
-                      buildRow(
-                        "Harga Per Produk",
-                        "Rp. 10000",
-                      ),
+                      buildRow("Harga Per Produk", "Rp. 10000"),
                       buildRow("Jumlah Produk", "1000x"),
-                      buildRow(
-                        "Biaya Layanan",
-                        "Rp. 10000",
-                      ),
+                      buildRow("Biaya Layanan", "Rp. 10000"),
                       const Divider(height: 30),
                       buildRow(
                         "Subtotal",
@@ -307,38 +317,35 @@ class _PaymentPageState extends State<PaymentPage> {
                             top: Radius.circular(20),
                           ),
                         ),
-                        builder:
-                            (context) => Padding(
-                              padding: const EdgeInsets.all(20),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  ListTile(
-                                    title: const Text('Tunai'),
-                                    onTap:
-                                        () => Navigator.pop(context, 'Tunai'),
-                                  ),
-                                  ListTile(
-                                    title: const Text('Transfer'),
-                                    onTap: () async {
-                                      final result =
-                                          await Navigator.push<String>(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder:
-                                                  (_) => const PaymentMethod(),
-                                            ),
-                                          );
-                                      Navigator.pop(context);
-                                      setState(() {
-                                        selectedPaymentMethod =
-                                            result ?? 'Transfer';
-                                      });
-                                    },
-                                  ),
-                                ],
+                        builder: (context) => Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              ListTile(
+                                title: const Text('Tunai'),
+                                onTap: () => Navigator.pop(context, 'Tunai'),
                               ),
-                            ),
+                              ListTile(
+                                title: const Text('Transfer'),
+                                onTap: () async {
+                                  final result =
+                                      await Navigator.push<String>(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => const PaymentMethod(),
+                                    ),
+                                  );
+                                  Navigator.pop(context);
+                                  setState(() {
+                                    selectedPaymentMethod =
+                                        result ?? 'Transfer';
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
                       );
 
                       if (result != null) {
@@ -363,13 +370,13 @@ class _PaymentPageState extends State<PaymentPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            selectedPaymentMethod ?? "Pilih Metode Pembayaran",
+                            selectedPaymentMethod ??
+                                "Pilih Metode Pembayaran",
                             style: TextStyle(
                               fontSize: 16,
-                              color:
-                                  selectedPaymentMethod == null
-                                      ? Colors.grey
-                                      : Colors.black,
+                              color: selectedPaymentMethod == null
+                                  ? Colors.grey
+                                  : Colors.black,
                             ),
                           ),
                           if (selectedPaymentMethod != null)
