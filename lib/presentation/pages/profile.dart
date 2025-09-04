@@ -1,5 +1,8 @@
+
 import 'package:e_mart_11bdg/presentation/pages/Settings/settings.dart';
-import 'package:e_mart_11bdg/presentation/pages/editprofile.dart';
+import 'package:e_mart_11bdg/presentation/pages/Profile/orderList.dart';
+import 'package:e_mart_11bdg/presentation/pages/Settings/settings.dart';
+import 'package:e_mart_11bdg/presentation/pages/Transaksi/transHistory.dart';
 import 'package:flutter/material.dart';
 import 'package:e_mart_11bdg/core/utils/shared_prefs.dart';
 import 'package:e_mart_11bdg/presentation/pages/login.dart';
@@ -8,7 +11,7 @@ import 'package:e_mart_11bdg/core/services/auth_services.dart';
 import 'package:e_mart_11bdg/core/services/profile_services.dart';
 import 'package:e_mart_11bdg/data/models/User.dart';
 import 'package:e_mart_11bdg/presentation/pages/editprofile.dart';
-// import 'package:e_mart_11bdg/presentation/pages/Settings/myAccount/accountSecurity/account_security.dart';
+import 'package:e_mart_11bdg/presentation/pages/Settings/myAccount/accountSecurity/account_security.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -224,19 +227,12 @@ class _ProfilePageState extends State<ProfilePage> {
                                 Icons.account_balance_wallet,
                                 iconSize: 20,
                                 onTap: () {
-                                  if (user != null) {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (_) => EditProfilePage(user: user!),
-                                      ),
-                                    );
-                                  } else {
-                                    // Bisa tambahkan snackbar/toast kalau data user belum siap
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(content: Text("Data profil belum dimuat")),
-                                    );
-                                  }
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => const AccountSecurity(),
+                                    ),
+                                  );
                                 },
                               ),
                               Divider(color: Colors.white),
@@ -247,7 +243,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (_) => const ProfilePage(),
+                                      builder: (_) => const OrdersPage(),
                                     ),
                                   );
                                 },
@@ -265,6 +261,17 @@ class _ProfilePageState extends State<ProfilePage> {
                                   );
                                 },
                               ),
+                              Divider(color: Colors.white),
+                              actionRow(
+                                "Riwayat Transaksi", 
+                                Icons.payment, 
+                                onTap: (){
+                                  Navigator.push(
+                                    context, 
+                                    MaterialPageRoute(builder: (_) => const TransHistory()),
+                                  );
+                                }
+                                )
                             ],
                           ),
                         ),
