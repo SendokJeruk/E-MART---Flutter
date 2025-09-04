@@ -1,13 +1,15 @@
+import 'package:flutter/material.dart';
 import 'package:e_mart_11bdg/presentation/widgets/dialogCart.dart';
 import 'package:e_mart_11bdg/presentation/widgets/product_skeleton.dart';
 import 'package:e_mart_11bdg/presentation/widgets/shimmerSKeleton.dart';
-import 'package:flutter/material.dart';
 import 'package:e_mart_11bdg/presentation/widgets/product.dart';
-import 'package:e_mart_11bdg/presentation/widgets/card.dart';
 import 'package:e_mart_11bdg/presentation/pages/payment.dart';
+import 'package:e_mart_11bdg/core/services/cart_services.dart';
+
+
 
 class ViewPage extends StatefulWidget {
-  final Map<String, dynamic> product; // data produk dari API
+  final Map<String, dynamic> product;
 
   const ViewPage({super.key, required this.product});
 
@@ -17,31 +19,55 @@ class ViewPage extends StatefulWidget {
 
 class _ViewPageState extends State<ViewPage> {
   bool isLoading = true;
-  bool isExpanded = false;
+  bool isAdding = false; // untuk indikator saat menambah keranjang
+  int jumlah = 1;
 
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(seconds: 1%2), () {
+    Future.delayed(const Duration(seconds: 1), () {
       setState(() {
         isLoading = false;
       });
     });
   }
 
+  Future<void> _addToCart() async {
+    if (isAdding) return; // cegah double tap
+    setState(() => isAdding = true);
+
+    try {
+      await CartServices().addToCart(
+        productId: widget.product['id'],
+        jumlah: jumlah,
+      );
+
+      if (mounted) {
+        Navigator.pop(context, true); // kasih sinyal refresh ke CartPage
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Produk ditambahkan ke keranjang")),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Gagal menambah ke keranjang: $e")),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => isAdding = false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
     final p = widget.product;
 
-     // ambil gambar produk (cover atau foto[0])
     final String imageUrl = p['foto_cover'] ??
         ((p['foto'] is List && (p['foto'] as List).isNotEmpty)
             ? p['foto'][0]['foto']
             : '');
 
-    // seller: toko → nama user → fallback "Toko"
     final String seller = (p['user']?['toko']?['nama_toko']) ??
         (p['user']?['name']) ??
         'Toko';
@@ -65,117 +91,80 @@ class _ViewPageState extends State<ViewPage> {
             isLoading
                 ? const ProductSkeleton()
                 : ProductDetail(
-                    imageUrl: imageUrl,
-                    title: p['nama_product'] ?? '',
-                    price: "Rp ${p['harga']}",
-                    sold: (p['sold'] ?? p['stock'] ?? 0).toString(),
-                    seller: seller,
-                    rating: double.tryParse(
-                            (p['average_rating'] ?? 0).toString()) ??
-                        0.0,
-                    description: p['deskripsi'] ?? '',
-                  ),
-
-            const SizedBox(height: 10),
+                imageUrl: imageUrl,
+                title: p['nama_product'] ?? '',
+                price: "Rp ${p['harga']}",
+                sold: (p['sold'] ?? p['stock'] ?? 0).toString(),
+                seller: seller,
+                rating: double.tryParse((p['average_rating'] ?? 0).toString()) ?? 0.0,
+                description: p['deskripsi'] ?? '',
+                onQuantityChanged: (val) => setState(() => jumlah = val), // 🔹 terima jumlah dari ProductDetail
+              ),
 
             if (!isLoading)
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                child: Column(
                   children: [
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (context) => const CartNotification(),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFBF3131),
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(vertical: 8),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        child: const Text("Masukkan Keranjang"),
-                      ),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8),
-                      child: Text("|",
-                          style: TextStyle(
-                              fontSize: 18, color: Colors.black)),
-                    ),
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => const PaymentPage(),
+                    // 🔹 tombol aksi
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: isAdding ? null : _addToCart,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFFBF3131),
+                              foregroundColor: Colors.white,
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 8),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
                             ),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFBF3131),
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(vertical: 8),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+                            child: isAdding
+                                ? const SizedBox(
+                                    height: 20,
+                                    width: 20,
+                                    child: CircularProgressIndicator(
+                                      color: Colors.white,
+                                      strokeWidth: 2,
+                                    ),
+                                  )
+                                : const Text("Masukkan Keranjang"),
                           ),
                         ),
-                        child: const Text("Order Sekarang"),
-                      ),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 8),
+                          child: Text("|", style: TextStyle(fontSize: 18)),
+                        ),
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => const PaymentPage()),
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFFBF3131),
+                              foregroundColor: Colors.white,
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 8),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            child: const Text("Order Sekarang"),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
               ),
-
             const SizedBox(height: 10),
-            // toggle ulasan
-            GestureDetector(
-              onTap: () => setState(() => isExpanded = !isExpanded),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    isExpanded ? 'Sembunyikan Ulasan' : 'Tampilkan Ulasan',
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFFBF3131)),
-                  ),
-                  const SizedBox(width: 6),
-                  Icon(
-                    isExpanded
-                        ? Icons.keyboard_arrow_up
-                        : Icons.keyboard_arrow_down,
-                    color: const Color(0xFFBF3131),
-                  )
-                ],
-              ),
-            ),
-            if (isExpanded)
-              Container(
-                padding: const EdgeInsets.all(16),
-                margin: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF0F0F0),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: const Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("⭐️⭐️⭐️⭐️⭐️",
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold)),
-                    SizedBox(height: 10),
-                    Text("Produknya enak banget!"),
-                  ],
-                ),
-              ),
           ],
         ),
       ),

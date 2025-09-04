@@ -13,6 +13,7 @@ class ProductDetail extends StatefulWidget {
   final String seller;
   final double rating;
   final String description;
+  final ValueChanged<int>? onQuantityChanged; // 🔹 callback
 
   const ProductDetail({
     super.key,
@@ -23,6 +24,7 @@ class ProductDetail extends StatefulWidget {
     required this.seller,
     required this.rating,
     required this.description,
+    this.onQuantityChanged,
   });
 
   @override
@@ -31,6 +33,16 @@ class ProductDetail extends StatefulWidget {
 
 class _ProductDetailState extends State<ProductDetail> {
   bool showFullText = false;
+  int jumlah = 1;
+
+  void _updateJumlah(int value) {
+    if (value < 1) return;
+    setState(() {
+      jumlah = value;
+    });
+    // 🔹 kirim ke parent (ViewPage)
+    widget.onQuantityChanged?.call(jumlah);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -94,11 +106,38 @@ class _ProductDetailState extends State<ProductDetail> {
                 ],
               ),
               const SizedBox(height: 16),
-              const Text("Deskripsi Produk",
-                  style: TextStyle(
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    "Deskripsi Produk",
+                    style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      fontFamily: 'Righteous')),
+                      fontFamily: 'Righteous',
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      IconButton(
+                        onPressed: () => _updateJumlah(jumlah - 1),
+                        icon: const Icon(Icons.remove_circle, color: Colors.red),
+                      ),
+                      Text(
+                        "$jumlah",
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () => _updateJumlah(jumlah + 1),
+                        icon: const Icon(Icons.add_circle, color: Colors.green),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
               const Divider(),
               const SizedBox(height: 4),
               RichText(

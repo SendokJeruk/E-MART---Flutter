@@ -7,8 +7,17 @@ import '../utils/constants.dart';
 import '../utils/shared_prefs.dart';
 
 class ProfileService {
+  /// Helper untuk fix URL localhost biar jalan di emulator
+  String fixLocalhostUrl(String url) {
+    if (url.contains('127.0.0.1')) {
+      return url.replaceFirst('127.0.0.1', '10.0.2.2');
+    } else if (url.contains('localhost')) {
+      return url.replaceFirst('localhost', '10.0.2.2');
+    }
+    return url;
+  }
 
-    ImageProvider getProfileImage({
+  ImageProvider getProfileImage({
     File? localFile,
     String? fotoProfil,
   }) {
@@ -17,11 +26,17 @@ class ProfileService {
     }
 
     if (fotoProfil != null && fotoProfil.isNotEmpty) {
-      if (fotoProfil.startsWith('http')) {
-        return NetworkImage(fotoProfil);
-      } else {
-        return NetworkImage("${Constants.baseUrl}/$fotoProfil");
+      String url = fotoProfil;
+
+      if (!url.startsWith('http')) {
+        // kalau backend cuma kirim path (misal "upload/pfp/xxx.png")
+        url = "${Constants.baseUrl}/$url";
       }
+
+      // fix URL supaya bisa diakses dari emulator
+      url = fixLocalhostUrl(url);
+
+      return NetworkImage(url);
     }
 
     return const AssetImage('assets/images/default.png');
