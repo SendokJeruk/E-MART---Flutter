@@ -199,4 +199,18 @@ class AddressProvider with ChangeNotifier {
       debugPrint("Error loadAddressesFromApi: $e");
     }
   }
+
+  Future<bool> deleteAddress(int id) async {
+  try {
+    final success = await service.deleteAddress(id);
+    if (success) {
+      addressList.removeWhere((a) => a['id'] == id);
+      notifyListeners();
+    }
+    return success;
+  } catch (e) {
+    debugPrint("Error deleteAddress: $e");
+    return false;
+  }
+}
 }

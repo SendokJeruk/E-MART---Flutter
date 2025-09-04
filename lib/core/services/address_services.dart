@@ -168,4 +168,22 @@ Future<List<Map<String, dynamic>>> getAddresses() async {
   }
   return [];
 }
+
+Future<bool> deleteAddress(int id) async {
+  final token = await SharedPrefs.getToken();
+  if (token == null) return false;
+
+  final res = await http.delete(
+    Uri.parse("${Constants.baseUrl}/alamat/$id"),
+    headers: {
+      'Authorization': 'Bearer $token',
+      'Accept': 'application/json',
+    },
+  );
+
+  print("DELETE STATUS: ${res.statusCode}");
+  print("DELETE BODY: ${res.body}");
+
+  return res.statusCode == 200 || res.statusCode == 204;
+}
 }
