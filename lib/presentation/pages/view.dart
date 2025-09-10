@@ -110,7 +110,7 @@ class _ViewPageState extends State<ViewPage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Expanded(
+                        Expanded( 
                           child: ElevatedButton(
                             onPressed: isAdding ? null : _addToCart,
                             style: ElevatedButton.styleFrom(
@@ -164,7 +164,108 @@ class _ViewPageState extends State<ViewPage> {
                   ],
                 ),
               ),
-            const SizedBox(height: 10),
+            // Bagian Review & Ulasan
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Ulasan Produk",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Righteous',
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+
+                  // rata-rata rating
+                  Row(
+                    children: [
+                      const Icon(Icons.star, color: Colors.amber, size: 20),
+                      const SizedBox(width: 4),
+                      Text(
+                        "${p['average_rating'] ?? 0.0} dari 5",
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+
+                  // list review
+                  if ((p['rating'] as List).isNotEmpty)
+                    Column(
+                      children: (p['rating'] as List)
+                          .take(5) // hanya ambil 5 review dulu
+                          .map((r) {
+                        final user = r['user']?['name'] ?? "Pengguna";
+                        final komentar = r['deskripsi'] ?? "-";
+                        final rating = r['rating'] ?? 0;
+
+                        return Container(
+                          margin: const EdgeInsets.only(bottom: 12),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const CircleAvatar(
+                                radius: 18,
+                                backgroundImage: NetworkImage(
+                                  "https://cdn-icons-png.flaticon.com/512/847/847969.png", // default avatar
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(user,
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 13)),
+                                    Row(
+                                      children: List.generate(
+                                        5,
+                                        (i) => Icon(
+                                          i < rating
+                                              ? Icons.star
+                                              : Icons.star_border,
+                                          size: 14,
+                                          color: Colors.amber,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      komentar,
+                                      style: const TextStyle(fontSize: 12),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                    )
+                  else
+                    const Text("Belum ada ulasan",
+                        style: TextStyle(fontSize: 13, color: Colors.grey)),
+
+                  const SizedBox(height: 10),
+                  if ((p['rating'] as List).length > 5)
+                    TextButton(
+                      onPressed: () {
+                        // TODO: arahkan ke halaman semua review
+                      },
+                      child: const Text("Lihat semua ulasan"),
+                    ),
+                ],
+              ),
+            ),
           ],
         ),
       ),

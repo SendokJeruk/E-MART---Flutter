@@ -60,7 +60,7 @@ class AccountSecurity extends StatelessWidget {
           ),
         ),
       ),
-      body: ListView(
+      body: ListView( 
         children: [
           sectionHeader("Akun"),
           menuItem(
@@ -68,7 +68,8 @@ class AccountSecurity extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (_) => const AccountSecurity()),
+                MaterialPageRoute(builder: (_) => const AccountSecurity()
+                ),
               );
             },
           ),
