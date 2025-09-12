@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../../provider/addressProvider.dart'; // sesuaikan path
+import '../../../../provider/Address/addressProvider.dart'; // sesuaikan path
 
 class AddAddressPage extends StatefulWidget {
   const AddAddressPage({super.key});
@@ -88,18 +88,21 @@ class _AddAddressPageState extends State<AddAddressPage> {
                       value: provider.selectedProvince,
                       hint: const Text("Pilih Provinsi"),
                       isExpanded: true,
-                      items: provider.provinces.map((prov) {
-                        return DropdownMenuItem(
-                          value: prov['id'].toString(),
-                          child: Text(prov['name']),
-                        );
-                      }).toList(),
+                      items:
+                          provider.provinces.map((prov) {
+                            return DropdownMenuItem(
+                              value: prov['id'].toString(),
+                              child: Text(prov['name']),
+                            );
+                          }).toList(),
                       onChanged: (val) {
                         if (val == null) return;
                         provider.selectProvince(val);
                         provider.loadCities(val);
                       },
-                      decoration: const InputDecoration(border: InputBorder.none),
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                      ),
                       validator: (v) => v == null ? 'Harus dipilih' : null,
                     ),
                   ),
@@ -112,18 +115,21 @@ class _AddAddressPageState extends State<AddAddressPage> {
                       value: provider.selectedCity,
                       hint: const Text("Pilih Kota"),
                       isExpanded: true,
-                      items: provider.cities.map((city) {
-                        return DropdownMenuItem(
-                          value: city['id'].toString(),
-                          child: Text(city['name']),
-                        );
-                      }).toList(),
+                      items:
+                          provider.cities.map((city) {
+                            return DropdownMenuItem(
+                              value: city['id'].toString(),
+                              child: Text(city['name']),
+                            );
+                          }).toList(),
                       onChanged: (val) {
                         if (val == null) return;
                         provider.selectCity(val);
                         provider.loadDistricts(val);
                       },
-                      decoration: const InputDecoration(border: InputBorder.none),
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                      ),
                       validator: (v) => v == null ? 'Harus dipilih' : null,
                     ),
                   ),
@@ -139,20 +145,23 @@ class _AddAddressPageState extends State<AddAddressPage> {
                             value: provider.selectedDistrict,
                             hint: const Text("Pilih Kecamatan"),
                             isExpanded: true,
-                            items: provider.districts.map((dist) {
-                              return DropdownMenuItem(
-                                value: dist['id'].toString(),
-                                child: Text(dist['name']),
-                              );
-                            }).toList(),
+                            items:
+                                provider.districts.map((dist) {
+                                  return DropdownMenuItem(
+                                    value: dist['id'].toString(),
+                                    child: Text(dist['name']),
+                                  );
+                                }).toList(),
                             onChanged: (val) {
                               if (val == null) return;
                               provider.selectDistrict(val);
                               provider.loadSubdistricts(val);
                             },
-                            decoration:
-                                const InputDecoration(border: InputBorder.none),
-                            validator: (v) => v == null ? 'Harus dipilih' : null,
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                            ),
+                            validator:
+                                (v) => v == null ? 'Harus dipilih' : null,
                           ),
                         ),
                       ),
@@ -164,19 +173,22 @@ class _AddAddressPageState extends State<AddAddressPage> {
                             value: provider.selectedSubdistrict,
                             hint: const Text("Pilih Kelurahan"),
                             isExpanded: true,
-                            items: provider.subdistricts.map((sub) {
-                              return DropdownMenuItem(
-                                value: sub['id'].toString(),
-                                child: Text(sub['name']),
-                              );
-                            }).toList(),
+                            items:
+                                provider.subdistricts.map((sub) {
+                                  return DropdownMenuItem(
+                                    value: sub['id'].toString(),
+                                    child: Text(sub['name']),
+                                  );
+                                }).toList(),
                             onChanged: (val) {
                               if (val == null) return;
                               provider.selectSubdistrict(val);
                             },
-                            decoration:
-                                const InputDecoration(border: InputBorder.none),
-                            validator: (v) => v == null ? 'Harus dipilih' : null,
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                            ),
+                            validator:
+                                (v) => v == null ? 'Harus dipilih' : null,
                           ),
                         ),
                       ),
@@ -188,7 +200,8 @@ class _AddAddressPageState extends State<AddAddressPage> {
                   ElevatedButton(
                     onPressed: () async {
                       await provider.cariKodeDomestik();
-                      if (provider.selectedDomestic == null && context.mounted) {
+                      if (provider.selectedDomestic == null &&
+                          context.mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                             content: Text("Data domestik tidak ditemukan"),
@@ -215,31 +228,34 @@ class _AddAddressPageState extends State<AddAddressPage> {
                         Expanded(
                           child: _buildDropdownContainer(
                             title: "Kode Domestik",
-                            child: DropdownButtonFormField<Map<String, dynamic>>(
-                              value: provider.selectedDomestic,
-                              hint: const Text("Kode Domestik"),
-                              isExpanded: true,
-                              items: provider.searchResults.map((dom) {
-                                final idText = dom['kode_domestik']?.toString() ??
-                                    dom['id'].toString();
-                                return DropdownMenuItem(
-                                  value: dom,
-                                  child: Text(idText),
-                                );
-                              }).toList(),
-                              onChanged: (val) {
-                                if (val == null) return;
-                                provider.selectDomestic(val);
-                                setState(() {
-                                  selectedZipValue =
-                                      val['zip_code']?.toString();
-                                });
-                              },
-                              decoration: const InputDecoration(
-                                border: InputBorder.none,
-                              ),
-                              validator: (v) => v == null ? 'Wajib' : null,
-                            ),
+                            child:
+                                DropdownButtonFormField<Map<String, dynamic>>(
+                                  value: provider.selectedDomestic,
+                                  hint: const Text("Kode Domestik"),
+                                  isExpanded: true,
+                                  items:
+                                      provider.searchResults.map((dom) {
+                                        final idText =
+                                            dom['kode_domestik']?.toString() ??
+                                            dom['id'].toString();
+                                        return DropdownMenuItem(
+                                          value: dom,
+                                          child: Text(idText),
+                                        );
+                                      }).toList(),
+                                  onChanged: (val) {
+                                    if (val == null) return;
+                                    provider.selectDomestic(val);
+                                    setState(() {
+                                      selectedZipValue =
+                                          val['zip_code']?.toString();
+                                    });
+                                  },
+                                  decoration: const InputDecoration(
+                                    border: InputBorder.none,
+                                  ),
+                                  validator: (v) => v == null ? 'Wajib' : null,
+                                ),
                           ),
                         ),
                         const SizedBox(width: 12),
@@ -254,8 +270,9 @@ class _AddAddressPageState extends State<AddAddressPage> {
                               decoration: const InputDecoration(
                                 border: InputBorder.none,
                               ),
-                              validator: (v) =>
-                                  v == null || v.isEmpty ? 'Wajib' : null,
+                              validator:
+                                  (v) =>
+                                      v == null || v.isEmpty ? 'Wajib' : null,
                             ),
                           ),
                         ),
@@ -300,32 +317,35 @@ class _AddAddressPageState extends State<AddAddressPage> {
                     ),
 
                   ElevatedButton(
-                    onPressed: provider.selectedSubdistrict != null &&
-                            provider.selectedDomestic != null &&
-                            _formKey.currentState!.validate()
-                        ? () async {
-                            final success = await provider.saveAddressToApi(
-                              detailAlamat: detailController.text,
-                            );
+                    onPressed:
+                        provider.selectedSubdistrict != null &&
+                                provider.selectedDomestic != null &&
+                                _formKey.currentState!.validate()
+                            ? () async {
+                              final success = await provider.saveAddressToApi(
+                                detailAlamat: detailController.text,
+                              );
 
-                            if (success && context.mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                      'Alamat berhasil disimpan ke server'),
-                                ),
-                              );
-                              Navigator.pop(context);
-                            } else if (context.mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content:
-                                      Text('Gagal simpan alamat ke server'),
-                                ),
-                              );
+                              if (success && context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                      'Alamat berhasil disimpan ke server',
+                                    ),
+                                  ),
+                                );
+                                Navigator.pop(context);
+                              } else if (context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                      'Gagal simpan alamat ke server',
+                                    ),
+                                  ),
+                                );
+                              }
                             }
-                          }
-                        : null,
+                            : null,
                     child: const Text('Simpan Alamat'),
                   ),
                 ],
@@ -337,7 +357,10 @@ class _AddAddressPageState extends State<AddAddressPage> {
     );
   }
 
-  Widget _buildDropdownContainer({required String title, required Widget child}) {
+  Widget _buildDropdownContainer({
+    required String title,
+    required Widget child,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -374,5 +397,4 @@ class _AddAddressPageState extends State<AddAddressPage> {
       ],
     );
   }
-  
 }

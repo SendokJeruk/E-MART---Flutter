@@ -3,7 +3,7 @@ import 'package:e_mart_11bdg/presentation/widgets/dialogCart.dart';
 import 'package:e_mart_11bdg/presentation/widgets/product_skeleton.dart';
 import 'package:e_mart_11bdg/presentation/widgets/shimmerSKeleton.dart';
 import 'package:e_mart_11bdg/presentation/widgets/product.dart';
-import 'package:e_mart_11bdg/presentation/pages/payment.dart';
+import 'package:e_mart_11bdg/presentation/pages/Payment/payment.dart';
 import 'package:e_mart_11bdg/core/services/cart_services.dart';
 
 

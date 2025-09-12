@@ -11,13 +11,13 @@ import 'package:e_mart_11bdg/presentation/pages/Transaksi/trackingHistory.dart';
 import 'package:e_mart_11bdg/presentation/pages/Transaksi/transHistory.dart';
 import 'package:e_mart_11bdg/presentation/pages/home.dart';
 import 'package:e_mart_11bdg/presentation/pages/notifikasi.dart';
-import 'package:e_mart_11bdg/presentation/pages/payment.dart';
+import 'package:e_mart_11bdg/presentation/pages/Payment/payment.dart';
 import 'package:e_mart_11bdg/presentation/pages/service.dart';
 import 'package:e_mart_11bdg/presentation/pages/splash.view.dart';
 import 'package:e_mart_11bdg/presentation/provider/Transaksi/transactionProvider.dart';
-import 'package:e_mart_11bdg/presentation/provider/addressProvider.dart';
+import 'package:e_mart_11bdg/presentation/provider/Address/addressProvider.dart';
 import 'package:e_mart_11bdg/presentation/provider/kategori_provider.dart';
-import 'package:e_mart_11bdg/presentation/provider/location_provider.dart';
+import 'package:e_mart_11bdg/presentation/provider/Address/locationProvider.dart';
 import 'package:e_mart_11bdg/presentation/pages/cart.dart';
 import 'package:e_mart_11bdg/presentation/provider/myOrderProvider.dart';
 import 'package:e_mart_11bdg/presentation/provider/product_provider.dart';
@@ -30,7 +30,7 @@ import 'presentation/pages/view.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'presentation/pages/DetailToko/produk.dart';
 import 'presentation/provider/tab_provider.dart';
-import '../presentation/provider/addressProvider.dart';
+import '../presentation/provider/Address/addressProvider.dart';
 import 'presentation/provider/Transaksi/trackingStep.dart';
 
 // ⬇️ Tambahan import

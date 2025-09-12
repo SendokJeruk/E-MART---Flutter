@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:e_mart_11bdg/core/services/cart_services.dart';
 import 'package:e_mart_11bdg/presentation/widgets/cart_item.dart';
-import 'package:e_mart_11bdg/presentation/pages/payment.dart';
+import 'package:e_mart_11bdg/presentation/pages/Payment/payment.dart';
 
 class CartPage extends StatefulWidget {
   const CartPage({super.key});

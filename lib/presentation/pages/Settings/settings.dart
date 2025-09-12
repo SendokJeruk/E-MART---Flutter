@@ -3,10 +3,12 @@ import 'package:e_mart_11bdg/presentation/pages/Settings/myAccount/accountAddres
 import 'package:e_mart_11bdg/presentation/pages/Settings/userSettings/Notification/listNotif.dart';
 import 'package:e_mart_11bdg/presentation/pages/paymentMethod.dart';
 import 'package:flutter/material.dart';
-
+import 'package:e_mart_11bdg/data/models/User.dart';
 
 class SettingsPage extends StatelessWidget {
-  const SettingsPage({super.key});
+  final UserModel user; // ✅ sekarang butuh user
+
+  const SettingsPage({super.key, required this.user});
 
   Widget sectionHeader(String title) {
     return Container(
@@ -37,7 +39,9 @@ class SettingsPage extends StatelessWidget {
         ),
       ),
       subtitle: subtitle != null
-          ? Text(subtitle, style: TextStyle(color: const Color.fromARGB(255, 165, 165, 165)))
+          ? Text(subtitle,
+              style: const TextStyle(
+                  color: Color.fromARGB(255, 165, 165, 165)))
           : null,
       trailing: const Icon(Icons.chevron_right, color: Colors.red),
       onTap: onTap,
@@ -65,13 +69,15 @@ class SettingsPage extends StatelessWidget {
           menuItem("Akun & Keamanan", onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (_) => const AccountSecurity()),
+              MaterialPageRoute(
+                builder: (_) => AccountSecurity(user: user), // ✅ kirim user
+              ),
             );
           }),
           menuItem("Alamat Saya", onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (_) => const MyaddressPage()),
+              MaterialPageRoute(builder: (_) => MyaddressPage()),
             );
           }),
 
@@ -91,30 +97,6 @@ class SettingsPage extends StatelessWidget {
           menuItem("Informasi"),
           menuItem("Ajukan HAPUS AKUN"),
           const SizedBox(height: 10),
-
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: ElevatedButton(
-              onPressed: () {
-                // Ganti akun action
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(14),
-                ),
-                padding: const EdgeInsets.symmetric(vertical: 10),
-              ),
-              child: const Text(
-                "Ganti Akun",
-                style: TextStyle(
-                  fontFamily: 'Righteous',
-                  fontSize: 16,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ),
         ],
       ),
     );
