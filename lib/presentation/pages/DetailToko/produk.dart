@@ -1,6 +1,6 @@
 import 'package:e_mart_11bdg/presentation/pages/home.dart';
 import 'package:flutter/material.dart';
-import 'package:e_mart_11bdg/presentation/pages/payment.dart';
+import 'package:e_mart_11bdg/presentation/pages/Payment/payment.dart';
 import 'package:e_mart_11bdg/presentation/pages/cart.dart';
 import 'package:e_mart_11bdg/presentation/provider/tab_provider.dart';
 import 'package:provider/provider.dart';

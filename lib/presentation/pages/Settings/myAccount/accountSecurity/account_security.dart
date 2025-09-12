@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:e_mart_11bdg/data/models/User.dart';
+import 'package:e_mart_11bdg/presentation/pages/editprofile.dart';
 
 class AccountSecurity extends StatelessWidget {
-  const AccountSecurity({super.key});
+  final UserModel user; // ✅ user login
+
+  const AccountSecurity({super.key, required this.user});
 
   Widget sectionHeader(String title) {
     return Container(
@@ -20,7 +24,11 @@ class AccountSecurity extends StatelessWidget {
     );
   }
 
-  Widget menuItem(String title, {VoidCallback? onTap, String? subtitle}) {
+  Widget menuItem(
+    String title, {
+    VoidCallback? onTap,
+    String? subtitle,
+  }) {
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 16),
       title: Text(
@@ -31,15 +39,14 @@ class AccountSecurity extends StatelessWidget {
           color: Colors.red,
         ),
       ),
-      subtitle:
-          subtitle != null
-              ? Text(
-                subtitle,
-                style: TextStyle(
-                  color: const Color.fromARGB(255, 165, 165, 165),
-                ),
-              )
-              : null,
+      subtitle: subtitle != null
+          ? Text(
+              subtitle,
+              style: const TextStyle(
+                color: Color.fromARGB(255, 165, 165, 165),
+              ),
+            )
+          : null,
       trailing: const Icon(Icons.chevron_right, color: Colors.red),
       onTap: onTap,
     );
@@ -68,7 +75,9 @@ class AccountSecurity extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (_) => const AccountSecurity()),
+                MaterialPageRoute(
+                  builder: (_) => EditProfilePage(user: user),
+                ),
               );
             },
           ),
@@ -77,31 +86,49 @@ class AccountSecurity extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (_) => const AccountSecurity()),
+                MaterialPageRoute(
+                  builder: (_) => EditProfilePage(user: user),
+                ),
               );
             },
           ),
-          menuItem("FUll Name"),
-          menuItem("Email"),
+          menuItem(
+            "Full Name",
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => EditProfilePage(user: user),
+                ),
+              );
+            },
+          ),
+          menuItem(
+            "Email",
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => EditProfilePage(user: user),
+                ),
+              );
+            },
+          ),
           menuItem(
             "Ganti Password",
             subtitle: "Manage your password",
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => EditProfilePage(user: user),
+                ),
+              );
+            },
           ),
           const SizedBox(height: 10),
 
           sectionHeader("Keamanan"),
-          // menuItem("Periksa Aktivitas Akun", onTap: () {
-          //   Navigator.push(
-          //     context,
-          //     MaterialPageRoute(builder: (_) => const AccountSecurity()),
-          //   );
-          // }),
-          // menuItem("Riwayat Login", onTap: () {
-          //   Navigator.push(
-          //     context,
-          //     MaterialPageRoute(builder: (_) => const AccountSecurity()),
-          //   );
-          // }),
         ],
       ),
     );

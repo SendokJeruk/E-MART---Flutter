@@ -186,4 +186,44 @@ Future<bool> deleteAddress(int id) async {
 
   return res.statusCode == 200 || res.statusCode == 204;
 }
+
+Future<List<Map<String, dynamic>>> getOngkir({
+  required String origin,
+  required String destination,
+  required int weight,
+  required String courier,
+}) async {
+  final token = await SharedPrefs.getToken();
+  if (token == null) return [];
+
+  try {
+    final res = await http.post(
+      Uri.parse("${Constants.baseUrl}/rajaongkir/cost"),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        "origin": origin,
+        "destination": destination,
+        "weight": weight,
+        "courier": courier,
+        "price": "lowest", // sama kayak Vue
+      }),
+    );
+
+    print("ONGKIR STATUS: ${res.statusCode}");
+    print("ONGKIR BODY: ${res.body}");
+
+    if (res.statusCode == 200) {
+      final body = jsonDecode(res.body);
+      final List data = body['data'] ?? [];
+      return List<Map<String, dynamic>>.from(data);
+    }
+  } catch (e) {
+    print("Error getOngkir: $e");
+  }
+  return [];
+}
 }

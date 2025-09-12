@@ -1,6 +1,6 @@
 import 'package:e_mart_11bdg/presentation/pages/cart.dart';
 import 'package:e_mart_11bdg/presentation/pages/view.dart';
-import 'package:e_mart_11bdg/presentation/pages/payment.dart';
+import 'package:e_mart_11bdg/presentation/pages/Payment/payment.dart';
 import 'package:e_mart_11bdg/presentation/widgets/bottom_bar.dart';
 import 'package:e_mart_11bdg/presentation/widgets/card.dart';
 import 'package:e_mart_11bdg/presentation/widgets/shimmerSKeleton.dart';

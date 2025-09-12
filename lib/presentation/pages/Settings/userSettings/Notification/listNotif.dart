@@ -69,7 +69,7 @@ class NotificationList extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (_) => const AccountSecurity()),
+                MaterialPageRoute(builder: (_) => const NotificationList()),
               );
             },
           ),
@@ -78,7 +78,7 @@ class NotificationList extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (_) => const AccountSecurity()),
+                MaterialPageRoute(builder: (_) => const NotificationList()),
               );
             },
           ),
@@ -87,7 +87,7 @@ class NotificationList extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (_) => const AccountSecurity()),
+                MaterialPageRoute(builder: (_) => const NotificationList()),
               );
             },
           ),
