@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:e_mart_11bdg/presentation/pages/Payment/groupPayment.dart';
 import 'package:e_mart_11bdg/presentation/pages/Profile.dart';
 import 'package:e_mart_11bdg/presentation/pages/Profile/orderList.dart';
 import 'package:e_mart_11bdg/presentation/pages/Settings/myAccount/accountAddress/addAddress.dart';
