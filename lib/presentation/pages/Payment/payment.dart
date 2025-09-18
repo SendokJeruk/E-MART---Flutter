@@ -7,7 +7,9 @@ import 'package:e_mart_11bdg/presentation/provider/Address/locationProvider.dart
 import 'package:e_mart_11bdg/presentation/provider/Address/addressProvider.dart';
 
 class PaymentPage extends StatefulWidget {
-  const PaymentPage({super.key});
+  final List<int> selectedIds;
+
+  const PaymentPage({super.key, required this.selectedIds});
 
   @override
   State<PaymentPage> createState() => _PaymentPageState();
