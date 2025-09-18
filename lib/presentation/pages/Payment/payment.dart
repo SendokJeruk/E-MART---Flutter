@@ -3,8 +3,8 @@ import 'package:e_mart_11bdg/presentation/pages/paymentMethod.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:e_mart_11bdg/presentation/provider/product_provider.dart';
-import 'package:e_mart_11bdg/presentation/provider/Address/locationProvider.dart'; // cukup 1
-import 'package:e_mart_11bdg/presentation/provider/Address/addressProvider.dart'; // provider address
+import 'package:e_mart_11bdg/presentation/provider/Address/locationProvider.dart'; 
+import 'package:e_mart_11bdg/presentation/provider/Address/addressProvider.dart';
 
 class PaymentPage extends StatefulWidget {
   final List<int> selectedIds;
@@ -169,7 +169,9 @@ class _PaymentPageState extends State<PaymentPage> {
                         children: [
                           Expanded(
                             child: Text(
-                              lokasiProvider.selectedAddress?['label'] ?? "Pilih Alamat",
+                              (lokasiProvider.selectedAddress?['label'] ??
+                                      "Pilih Alamat")
+                                  .toString(),
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                 fontSize: 16,
@@ -222,7 +224,8 @@ class _PaymentPageState extends State<PaymentPage> {
 
                           await addressProvider.getOngkirByAddress(
                             origin: origin,
-                            destination: selectedAddress['kode_domestik'],
+                            destination:
+                                selectedAddress['kode_domestik'].toString(), //  fix
                             weight: weight,
                             courier: courier['kode']!,
                             kodeTransaksi: kodeTransaksi,
@@ -242,8 +245,9 @@ class _PaymentPageState extends State<PaymentPage> {
                           Expanded(
                             child: Text(
                               selectedCourier != null
-                                  ? addressProvider.kurirList.firstWhere(
-                                      (k) => k['kode'] == selectedCourier)['nama']!
+                                  ? addressProvider.kurirList
+                                      .firstWhere(
+                                          (k) => k['kode'] == selectedCourier)['nama']!
                                   : "Pilih Kurir",
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
@@ -275,6 +279,7 @@ class _PaymentPageState extends State<PaymentPage> {
               ),
               child: Consumer<AddressProvider>(
                 builder: (context, addressProvider, _) {
+                  final ongkir = addressProvider.ongkir ?? 0; // ✅ fix null-safe
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -290,11 +295,11 @@ class _PaymentPageState extends State<PaymentPage> {
                         children: [
                           buildRow("Harga Per Produk", "Rp. 10000"),
                           buildRow("Jumlah Produk", "1000x"),
-                          buildRow("Biaya Layanan", "Rp. ${addressProvider.ongkir}"),
+                          buildRow("Biaya Layanan", "Rp. $ongkir"), // ✅ fix
                           const Divider(height: 30),
                           buildRow(
                             "Subtotal",
-                            "Rp. ${10000 + addressProvider.ongkir}",
+                            "Rp. ${10000 + ongkir}", // ✅ fix
                             bold: true,
                             color: const Color.fromARGB(255, 109, 20, 20),
                           ),
