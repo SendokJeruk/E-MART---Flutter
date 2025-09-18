@@ -5,8 +5,16 @@ import 'package:e_mart_11bdg/core/services/cart_services.dart';
 class CartItem extends StatelessWidget {
   final Map<String, dynamic> item;
   final VoidCallback? onDelete;
+  final bool isSelected;
+  final ValueChanged<bool?>? onSelected;
 
-  const CartItem({super.key, required this.item, this.onDelete});
+  const CartItem({
+    super.key,
+    required this.item,
+    this.onDelete,
+    this.isSelected = false,
+    this.onSelected,
+  });
 
   int _parsePrice(dynamic v) {
     if (v == null) return 0;
@@ -93,6 +101,12 @@ class CartItem extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // ⬅️ Checkbox untuk pilih produk
+            Checkbox(
+              value: isSelected,
+              onChanged: onSelected,
+              activeColor: Colors.red,
+            ),
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
               child: ErrorImageHandler(
@@ -170,15 +184,6 @@ class CartItem extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 8),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: IconButton(
-                      icon: const Icon(Icons.delete, color: Colors.red),
-                      onPressed: () {
-                        if (id != null) _deleteItem(context, id);
-                      },
-                    ),
-                  ),
                 ],
               ),
             ),

@@ -1,3 +1,4 @@
+import 'package:e_mart_11bdg/presentation/pages/home.dart';
 import 'package:flutter/material.dart';
 import 'package:e_mart_11bdg/presentation/widgets/dialogCart.dart';
 import 'package:e_mart_11bdg/presentation/widgets/product_skeleton.dart';
@@ -144,7 +145,7 @@ class _ViewPageState extends State<ViewPage> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (_) => const PaymentPage()),
+                                    builder: (_) => const HomePage()),
                               );
                             },
                             style: ElevatedButton.styleFrom(
