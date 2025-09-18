@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import '../../../core/services/address_services.dart';
 import '../../../core/utils/shared_prefs.dart';
 import '../../../core/utils/constants.dart';
+import '../../pages/Payment/payment.dart';
 
 class AddressProvider with ChangeNotifier {
   final AddressService service = AddressService();
@@ -75,18 +76,20 @@ class AddressProvider with ChangeNotifier {
     showKodeDomestik = false;
   }
 
-  Map<String, dynamic> _buildAddress(String? detailAlamat) {
-    return {
-      "label": autoLabel,
-      "province_name": _findName(provinces, selectedProvince) ?? "",
-      "city_name": _findName(cities, selectedCity) ?? "",
-      "district_name": _findName(districts, selectedDistrict) ?? "",
-      "subdistrict_name": _findName(subdistricts, selectedSubdistrict) ?? "",
-      "kode_domestik": selectedDomestic?['kode_domestik'] ?? "",
-      "zip_code": selectedDomestic?['zip_code'] ?? "",
-      "detail_alamat": detailAlamat ?? "",
-    };
-  }
+Future<Map<String, dynamic>> _buildAddress(String? detailAlamat) async {
+  final namaPenerima = await SharedPrefs.getUserName(); // tunggu hasilnya
+  return {
+    "label": autoLabel,
+    "province_name": _findName(provinces, selectedProvince) ?? "",
+    "city_name": _findName(cities, selectedCity) ?? "",
+    "district_name": _findName(districts, selectedDistrict) ?? "",
+    "subdistrict_name": _findName(subdistricts, selectedSubdistrict) ?? "",
+    "kode_domestik": selectedDomestic?['kode_domestik'] ?? "",
+    "zip_code": selectedDomestic?['zip_code'] ?? "",
+    "detail_alamat": detailAlamat ?? "",
+    "nama_penerima": namaPenerima ?? "User", // hasil sudah String
+  };
+}
 
   // --- load data
   Future<void> loadProvinces() async {
@@ -193,29 +196,47 @@ class AddressProvider with ChangeNotifier {
     return "$subd, $dist, $city, $prov${zip != "" ? " ($zip)" : ""}";
   }
 
-  // --- save address
-  Future<bool> saveAddressToApi({String? detailAlamat}) async {
-    try {
-      final addr = _buildAddress(detailAlamat);
-      final http.Response response = await service.saveAddress(addr);
+Future<bool> saveAddressToApi({
+  String? detailAlamat,
+  BuildContext? context,
+  bool fromCheckout = false, // default false = dari settings
+}) async {
+  try {
+    final addr = await _buildAddress(detailAlamat);
+    final http.Response response = await service.saveAddress(addr);
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        final data = jsonDecode(response.body);
-        if (data['data'] != null) {
-          addressList.add(Map<String, dynamic>.from(data['data']));
-          notifyListeners();
-        }
-        return true;
-      } else {
-        debugPrint("SAVE ADDRESS STATUS: ${response.statusCode}");
-        debugPrint("SAVE ADDRESS BODY: ${response.body}");
-        return false;
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      final data = jsonDecode(response.body);
+      if (data['data'] != null) {
+        addressList.add(Map<String, dynamic>.from(data['data']));
+        notifyListeners();
       }
-    } catch (e) {
-      debugPrint("Error saveAddressToApi: $e");
+
+      // === pindah halaman setelah berhasil ===
+      if (context != null) {
+        if (fromCheckout) {
+          // kalau dipanggil dari alur checkout
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => const PaymentPage()),
+          );
+        } else {
+          // kalau dari settings, cukup pop balik
+          Navigator.pop(context, true); // bisa return "true" biar parent refresh
+        }
+      }
+
+      return true;
+    } else {
+      debugPrint("SAVE ADDRESS STATUS: ${response.statusCode}");
+      debugPrint("SAVE ADDRESS BODY: ${response.body}");
       return false;
     }
+  } catch (e) {
+    debugPrint("Error saveAddressToApi: $e");
+    return false;
   }
+}
 
   // --- load address list
   Future<void> loadAddressesFromApi() async {
