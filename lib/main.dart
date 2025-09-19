@@ -34,6 +34,7 @@ import 'presentation/provider/tab_provider.dart';
 import '../presentation/provider/Address/addressProvider.dart';
 import 'presentation/provider/Transaksi/trackingStep.dart';
 
+
 // ⬇️ Tambahan import
 import 'presentation/provider/detailOrderProvider.dart';
 import '../../presentation/pages/Transaksi/detailTransaksi.dart';
@@ -54,6 +55,7 @@ void main() {
         ChangeNotifierProvider(create: (_) => DetailTransProvider()),
         ChangeNotifierProvider(create: (_) => OrderProvider()),
         ChangeNotifierProvider(create: (_) => TransHistoryProvider()),
+        ChangeNotifierProvider(create: (_) => ProductProvider()),
         ChangeNotifierProvider(create: (_) {
           final provider = DetailTransProvider();
           provider.loadDummyData(); 
