@@ -1,7 +1,7 @@
 import 'dart:developer';
-
 import 'package:e_mart_11bdg/presentation/pages/Payment/groupPayment.dart';
 import 'package:e_mart_11bdg/presentation/pages/Profile.dart';
+import 'package:e_mart_11bdg/presentation/pages/Profile/editprofile.dart';
 import 'package:e_mart_11bdg/presentation/pages/Profile/orderList.dart';
 import 'package:e_mart_11bdg/presentation/pages/Settings/myAccount/accountAddress/addAddress.dart';
 import 'package:e_mart_11bdg/presentation/pages/Settings/myAccount/accountAddress/myAddress.dart';
@@ -33,11 +33,9 @@ import 'presentation/pages/DetailToko/produk.dart';
 import 'presentation/provider/tab_provider.dart';
 import '../presentation/provider/Address/addressProvider.dart';
 import 'presentation/provider/Transaksi/trackingStep.dart';
-
-
-// ⬇️ Tambahan import
 import 'presentation/provider/detailOrderProvider.dart';
 import '../../presentation/pages/Transaksi/detailTransaksi.dart';
+
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -79,7 +77,7 @@ class MainApp extends StatelessWidget {
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-      home: const SplashView(),
+      home: const ProfilePage(),
     );
   }
 }

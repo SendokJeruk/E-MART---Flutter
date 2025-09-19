@@ -1,3 +1,4 @@
+import 'package:e_mart_11bdg/presentation/pages/Payment/groupPayment.dart';
 import 'package:flutter/material.dart';
 import 'package:e_mart_11bdg/core/services/cart_services.dart';
 import 'package:e_mart_11bdg/presentation/widgets/cart_item.dart';
@@ -246,7 +247,7 @@ int _calculateSelectedQuantity(List items) {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (_) => PaymentPage(
+                                  builder: (_) => GroupPaymentPage(
                                     selectedIds: selectedItems.toList(), // ⬅️ kirim ke payment
                                   ),
                                 ),

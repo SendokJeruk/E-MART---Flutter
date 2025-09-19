@@ -5,10 +5,23 @@ import 'package:e_mart_11bdg/presentation/pages/paymentMethod.dart';
 import 'package:flutter/material.dart';
 import 'package:e_mart_11bdg/data/models/User.dart';
 
-class SettingsPage extends StatelessWidget {
-  final UserModel user; // ✅ sekarang butuh user
+class SettingsPage extends StatefulWidget {
+  final UserModel user;
 
   const SettingsPage({super.key, required this.user});
+
+  @override
+  State<SettingsPage> createState() => _SettingsPageState();
+}
+
+class _SettingsPageState extends State<SettingsPage> {
+  late UserModel currentUser;
+
+  @override
+  void initState() {
+    super.initState();
+    currentUser = widget.user;
+  }
 
   Widget sectionHeader(String title) {
     return Container(
@@ -40,12 +53,27 @@ class SettingsPage extends StatelessWidget {
       ),
       subtitle: subtitle != null
           ? Text(subtitle,
-              style: const TextStyle(
-                  color: Color.fromARGB(255, 165, 165, 165)))
+              style: const TextStyle(color: Color.fromARGB(255, 165, 165, 165)))
           : null,
       trailing: const Icon(Icons.chevron_right, color: Colors.red),
       onTap: onTap,
     );
+  }
+
+  Future<void> _openAccountSecurity() async {
+    final updatedUser = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => AccountSecurity(user: currentUser),
+      ),
+    );
+
+    if (updatedUser != null) {
+      setState(() {
+        currentUser = updatedUser;
+      });
+      Navigator.pop(context, updatedUser); // kirim balik ke ProfilePage
+    }
   }
 
   @override
@@ -66,14 +94,7 @@ class SettingsPage extends StatelessWidget {
       body: ListView(
         children: [
           sectionHeader("Akun Saya"),
-          menuItem("Akun & Keamanan", onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => AccountSecurity(user: user), // ✅ kirim user
-              ),
-            );
-          }),
+          menuItem("Akun & Keamanan", onTap: _openAccountSecurity),
           menuItem("Alamat Saya", onTap: () {
             Navigator.push(
               context,

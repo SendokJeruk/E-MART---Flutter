@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import '../../data/models/User.dart';
-import '../../core/services/profile_services.dart';
-import 'package:e_mart_11bdg/presentation/pages/changePassword.dart';
+import '../../../data/models/User.dart';
+import '../../../core/services/profile_services.dart';
+import 'package:e_mart_11bdg/presentation/pages/Settings/myAccount/accountSecurity/changePassword.dart';
 import 'package:e_mart_11bdg/core/utils/constants.dart';
 
 class EditProfilePage extends StatefulWidget {
