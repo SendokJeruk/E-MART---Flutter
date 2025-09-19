@@ -8,6 +8,7 @@ import '../../pages/Payment/payment.dart';
 
 class AddressProvider with ChangeNotifier {
   final AddressService service = AddressService();
+  
 
   List<Map<String, dynamic>> provinces = [],
       cities = [],
@@ -16,6 +17,7 @@ class AddressProvider with ChangeNotifier {
       searchResults = [];
 
   List<Map<String, dynamic>> addressList = [];
+  Set<int> selectedItems = {};
 
   // === data pilihan alamat
   String? selectedProvince, selectedCity, selectedDistrict, selectedSubdistrict;
@@ -218,7 +220,11 @@ Future<bool> saveAddressToApi({
           // kalau dipanggil dari alur checkout
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (_) => const PaymentPage()),
+            MaterialPageRoute(
+              builder: (_) => PaymentPage(
+                selectedIds: selectedItems.toList(), // ⬅️ kirim ke payment
+              ),
+            ),
           );
         } else {
           // kalau dari settings, cukup pop balik

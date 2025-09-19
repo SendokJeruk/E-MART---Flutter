@@ -22,6 +22,8 @@ class _ViewPageState extends State<ViewPage> {
   bool isLoading = true;
   bool isAdding = false; // untuk indikator saat menambah keranjang
   int jumlah = 1;
+  Set<int> selectedItems = {}; // ⬅️ simpan item terpilih
+
 
   @override
   void initState() {
@@ -145,7 +147,10 @@ class _ViewPageState extends State<ViewPage> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (_) => const HomePage()),
+                                  builder: (_) => PaymentPage(
+                                    selectedIds: selectedItems.toList(), // ⬅️ kirim ke payment
+                                  ),
+                                ),
                               );
                             },
                             style: ElevatedButton.styleFrom(

@@ -1,11 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:e_mart_11bdg/data/models/User.dart';
-import 'package:e_mart_11bdg/presentation/pages/editprofile.dart';
+import 'package:e_mart_11bdg/presentation/pages/Profile/editprofile.dart';
 
-class AccountSecurity extends StatelessWidget {
+class AccountSecurity extends StatefulWidget {
   final UserModel user; // ✅ user login
 
   const AccountSecurity({super.key, required this.user});
+
+  @override
+  _AccountSecurityState createState() => _AccountSecurityState();
+}
+
+class _AccountSecurityState extends State<AccountSecurity> {
+  late UserModel currentUser; // ✅ user yang bisa berubah (state)
+
+  @override
+  void initState() {
+    super.initState();
+    currentUser = widget.user; // isi awal
+  }
 
   Widget sectionHeader(String title) {
     return Container(
@@ -52,6 +65,23 @@ class AccountSecurity extends StatelessWidget {
     );
   }
 
+  Future<void> _navigateToEditProfile() async {
+    final updatedUser = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => EditProfilePage(user: currentUser),
+      ),
+    );
+
+    if (updatedUser != null && mounted) {
+      setState(() {
+        currentUser = updatedUser; // ✅ simpan user baru
+      });
+
+      Navigator.pop(context, updatedUser);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,65 +100,27 @@ class AccountSecurity extends StatelessWidget {
       body: ListView(
         children: [
           sectionHeader("Akun"),
-          menuItem(
-            "Profile Saya",
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => EditProfilePage(user: user),
-                ),
-              );
-            },
-          ),
-          menuItem(
-            "Username",
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => EditProfilePage(user: user),
-                ),
-              );
-            },
-          ),
-          menuItem(
-            "Full Name",
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => EditProfilePage(user: user),
-                ),
-              );
-            },
-          ),
-          menuItem(
-            "Email",
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => EditProfilePage(user: user),
-                ),
-              );
-            },
-          ),
+          menuItem("Profile Saya", onTap: _navigateToEditProfile),
+          menuItem("Username", onTap: _navigateToEditProfile),
+          menuItem("Full Name", onTap: _navigateToEditProfile),
+          menuItem("Email", onTap: _navigateToEditProfile),
           menuItem(
             "Ganti Password",
             subtitle: "Manage your password",
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => EditProfilePage(user: user),
-                ),
-              );
-            },
+            onTap: _navigateToEditProfile,
           ),
           const SizedBox(height: 10),
 
           sectionHeader("Keamanan"),
+
+          // ✅ contoh pakai data terbaru
+          ListTile(
+            title: Text(
+              "Nama saat ini: ${currentUser.name ?? '-'}",
+              style: const TextStyle(fontFamily: 'Righteous'),
+            ),
+            subtitle: Text("Email: ${currentUser.email ?? '-'}"),
+          ),
         ],
       ),
     );

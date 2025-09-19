@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../core/services/profile_services.dart';
+import '../../../../../core/services/profile_services.dart';
 
 class ChangePasswordPage extends StatefulWidget {
   const ChangePasswordPage({Key? key}) : super(key: key);

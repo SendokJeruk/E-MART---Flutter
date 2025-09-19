@@ -10,7 +10,9 @@ import '../../widgets/BoxSectionHeader/boxContent.dart';
 import '../../widgets/Payment/bodyPaymentProduk.dart';
 
 class GroupPaymentPage extends StatefulWidget {
-  const GroupPaymentPage({super.key});
+    final List<int> selectedIds;
+
+  const GroupPaymentPage({super.key, required this.selectedIds});
 
   @override
   State<GroupPaymentPage> createState() => _GroupPaymentPageState();
