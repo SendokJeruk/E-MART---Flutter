@@ -12,6 +12,7 @@ class CartPage extends StatefulWidget {
 
 class _CartPageState extends State<CartPage> {
   late Future<Map<String, dynamic>> _cartFuture;
+  Set<int> selectedItems = {}; // ⬅️ simpan item terpilih
 
   @override
   void initState() {
@@ -60,20 +61,33 @@ class _CartPageState extends State<CartPage> {
     }
   }
 
-  int _calculateSubtotal(List items) {
-    return items.fold(0, (sum, item) => sum + _itemSubtotal(item as Map<String, dynamic>));
-  }
-
-  int _calculateTotalQuantity(List items) {
-    return items.fold(0, (sum, item) => sum + _parseQty((item as Map<String, dynamic>)['jumlah']));
-  }
-
   String _formatRupiah(int value) {
     final s = value.abs().toString();
     final reg = RegExp(r'\B(?=(\d{3})+(?!\d))');
     final out = s.replaceAllMapped(reg, (m) => '.');
     return (value < 0 ? '-' : '') + out;
   }
+
+  int _calculateSelectedSubtotal(List items) {
+  return items.fold(0, (sum, item) {
+    final map = item as Map<String, dynamic>;
+    if (selectedItems.contains(map['id'])) {
+      return sum + _itemSubtotal(map);
+    }
+    return sum;
+  });
+}
+
+int _calculateSelectedQuantity(List items) {
+  return items.fold(0, (sum, item) {
+    final map = item as Map<String, dynamic>;
+    if (selectedItems.contains(map['id'])) {
+      return sum + _parseQty(map['jumlah']);
+    }
+    return sum;
+  });
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -83,17 +97,61 @@ class _CartPageState extends State<CartPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: const Color(0xFFBF3131),
-        title: const Text(
-          'Keranjang',
-          style: TextStyle(
-            fontFamily: 'Righteous',
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
+      backgroundColor: const Color(0xFFBF3131),
+      title: const Text(
+        'Keranjang',
+        style: TextStyle(
+          fontFamily: 'Righteous',
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
         ),
-        iconTheme: const IconThemeData(color: Colors.white),
       ),
+      iconTheme: const IconThemeData(color: Colors.white),
+      actions: [
+        if (selectedItems.isNotEmpty) // hanya muncul jika ada produk dipilih
+          IconButton(
+            icon: const Icon(Icons.delete, color: Colors.white),
+            onPressed: () async {
+              final confirm = await showDialog<bool>(
+                context: context,
+                builder: (ctx) => AlertDialog(
+                  title: const Text("Hapus Produk"),
+                  content: const Text("Apakah Anda yakin ingin menghapus produk yang dipilih?"),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(ctx, false),
+                      child: const Text("Batal"),
+                    ),
+                    TextButton(
+                      onPressed: () => Navigator.pop(ctx, true),
+                      child: const Text("Hapus", style: TextStyle(color: Colors.red)),
+                    ),
+                  ],
+                ),
+              );
+
+              if (confirm == true) {
+                for (final id in selectedItems) {
+                  try {
+                    await CartServices().removeFromCart(id);
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Gagal menghapus item $id: $e")),
+                    );
+                  }
+                }
+                setState(() {
+                  selectedItems.clear();
+                  _cartFuture = CartServices().getCart();
+                });
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("Produk berhasil dihapus")),
+                );
+              }
+            },
+          ),
+      ],
+    ),
       body: FutureBuilder<Map<String, dynamic>>(
         future: _cartFuture,
         builder: (context, snapshot) {
@@ -111,8 +169,9 @@ class _CartPageState extends State<CartPage> {
 
           final carts = snapshot.data!['data'] as List;
           final cartDetails = carts.first['cart_detail'] as List;
-          final subtotal = _calculateSubtotal(cartDetails);
-          final totalQuantity = _calculateTotalQuantity(cartDetails);
+          final selectedSubtotal = _calculateSelectedSubtotal(cartDetails);
+          final selectedQty = _calculateSelectedQuantity(cartDetails);
+
 
           return Column(
             children: [
@@ -120,12 +179,24 @@ class _CartPageState extends State<CartPage> {
                 child: RefreshIndicator(
                   onRefresh: _refreshCart,
                   child: ListView.builder(
-                    itemCount: cartDetails.length,
-                    itemBuilder: (context, index) {
-                      final item = cartDetails[index] as Map<String, dynamic>;
+                  itemCount: cartDetails.length,
+                  itemBuilder: (context, index) {
+                    final item = cartDetails[index] as Map<String, dynamic>;
+                    final id = item['id'] as int;
+
                       return CartItem(
                         item: item,
                         onDelete: _refreshCart,
+                        isSelected: selectedItems.contains(id),
+                        onSelected: (selected) {
+                          setState(() {
+                            if (selected == true) {
+                              selectedItems.add(id);
+                            } else {
+                              selectedItems.remove(id);
+                            }
+                          });
+                        },
                       );
                     },
                   ),
@@ -150,28 +221,37 @@ class _CartPageState extends State<CartPage> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          '$totalQuantity produk',
-                          style: const TextStyle(
-                            fontFamily: 'Righteous',
-                            fontSize: 14,
-                          ),
+                      Text(
+                        '$selectedQty produk dipilih',
+                        style: const TextStyle(
+                          fontFamily: 'Righteous',
+                          fontSize: 14,
                         ),
-                        Text(
-                          'Subtotal: Rp ${_formatRupiah(subtotal)}',
-                          style: const TextStyle(
-                            fontFamily: 'Righteous',
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                            color: Colors.red,
-                          ),
+                      ),
+                      Text(
+                        'Subtotal: Rp ${_formatRupiah(selectedSubtotal)}',
+                        style: const TextStyle(
+                          fontFamily: 'Righteous',
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                          color: Colors.red,
                         ),
+                      ),
                       ],
                     ),
                     ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (_) => const PaymentPage()));
-                      },
+                      onPressed: selectedItems.isEmpty
+                          ? null
+                          : () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => PaymentPage(
+                                    selectedIds: selectedItems.toList(), // ⬅️ kirim ke payment
+                                  ),
+                                ),
+                              );
+                            },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.red,
                         foregroundColor: Colors.white,
