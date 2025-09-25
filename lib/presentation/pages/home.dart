@@ -298,7 +298,7 @@ class _HomePageState extends State<HomePage> {
                                 ((product['foto'] is List &&
                                         product['foto'].isNotEmpty)
                                     ? product['foto'][0]['foto']
-                                    : ''), // ambil foto_cover, fallback foto pertama
+                                    : ''),
                             title: product['nama_product'] ?? '',
                             price: "Rp ${product['harga'] ?? '0'}",
                             sold:
@@ -324,6 +324,34 @@ class _HomePageState extends State<HomePage> {
                           );
                         },
                       ),
+
+                      // Tombol View More
+                      // Tombol View More
+                      if (productProvider.products.isNotEmpty &&
+                          productProvider.isLoadingMore == false &&
+                          productProvider.currentPage <
+                              productProvider
+                                  .lastPage) // << cek apakah masih ada halaman berikutnya
+                        ElevatedButton(
+                          onPressed: () {
+                            productProvider.fetchProducts(loadMore: true);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Color(0xFFBF3131),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: Text("Tampilkan Selengkapnya", style: TextStyle(color: Colors.white),),
+                        ),
+
+                      if (productProvider.isLoadingMore)
+                        Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: CircularProgressIndicator(
+                            color: Color(0xFFBF3131),
+                          ),
+                        ),
                     ],
                   ),
                 ),
