@@ -1,8 +1,8 @@
+import 'package:e_mart_11bdg/presentation/pages/view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:e_mart_11bdg/presentation/provider/product_provider.dart';
 import 'package:e_mart_11bdg/presentation/widgets/card.dart';
-import 'package:e_mart_11bdg/core/models/kategori.dart';
 import 'package:e_mart_11bdg/presentation/pages/cart.dart';
 
 class SearchPage extends StatefulWidget {
@@ -14,37 +14,14 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   final TextEditingController _controller = TextEditingController();
-  List<dynamic> _searchResults = [];
-  bool _isSearching = false;
 
-  // contoh rekomendasi kategori
-  final List<Kategori> rekomendasi = [
-    Kategori(nama: "Fashion", jumlah: 1240),
-    Kategori(nama: "Elektronik", jumlah: 980),
-    Kategori(nama: "Kecantikan", jumlah: 740),
-    Kategori(nama: "Makanan", jumlah: 1120),
-    Kategori(nama: "Rumah Tangga", jumlah: 620),
-  ];
-
-  void _search(String query) async {
-    if (query.isEmpty) {
-      setState(() {
-        _isSearching = false;
-        _searchResults.clear();
-      });
-      return;
-    }
-
-    setState(() {
-      _isSearching = true;
-    });
-
+  void _search(String query) {
     final provider = Provider.of<ProductProvider>(context, listen: false);
-    await provider.searchProducts(query); // method baru di provider
-    setState(() {
-      _searchResults = provider.searchResult;
-      _isSearching = false;
-    });
+    if (query.isEmpty) {
+      provider.clearSearch();
+    } else {
+      provider.searchProductsByNamaProduct(query);
+    }
   }
 
   @override
@@ -68,43 +45,33 @@ class _SearchPageState extends State<SearchPage> {
           onChanged: _search,
         ),
       ),
-      body:
-          _controller.text.isEmpty
-              ? _buildRekomendasi()
-              : _isSearching
-              ? const Center(child: CircularProgressIndicator())
-              : _buildHasil(screenWidth, screenHeight),
+      body: Consumer<ProductProvider>(
+        builder: (context, provider, child) {
+          if (_controller.text.isEmpty) {
+            return const Center(
+              child: Text(
+                "🔎 Ketik untuk mencari produk...",
+                style: TextStyle(fontSize: 16, color: Colors.grey),
+              ),
+            );
+          }
+
+          if (provider.searchLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          return _buildHasil(screenWidth, screenHeight, provider.searchResult);
+        },
+      ),
     );
   }
 
-  Widget _buildRekomendasi() {
-    return ListView(
-      padding: const EdgeInsets.all(16),
-      children: [
-        const Text(
-          "Rekomendasi Kategori",
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 12),
-        Wrap(
-          spacing: 10,
-          runSpacing: 10,
-          children:
-              rekomendasi
-                  .map(
-                    (kat) => Chip(
-                      label: Text("${kat.nama} (${kat.jumlah})"),
-                      backgroundColor: Colors.red.shade100,
-                    ),
-                  )
-                  .toList(),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildHasil(double screenWidth, double screenHeight) {
-    if (_searchResults.isEmpty) {
+  Widget _buildHasil(
+    double screenWidth,
+    double screenHeight,
+    List<dynamic> results,
+  ) {
+    if (results.isEmpty) {
       return const Center(
         child: Text(
           "⚠️ Produk tidak ditemukan",
@@ -119,19 +86,20 @@ class _SearchPageState extends State<SearchPage> {
 
     return GridView.builder(
       padding: const EdgeInsets.all(10),
-      itemCount: _searchResults.length,
+      itemCount: results.length,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         childAspectRatio: screenWidth / (screenHeight / 1.83),
       ),
       itemBuilder: (context, index) {
-        final product = _searchResults[index];
+        final product = results[index];
+
         return ProductCard(
           imageUrl:
               product['foto_cover'] ??
               ((product['foto'] is List && product['foto'].isNotEmpty)
                   ? product['foto'][0]['foto']
-                  : ''),
+                  : ''), 
           title: product['nama_product'] ?? '',
           price: "Rp ${product['harga'] ?? '0'}",
           sold: (product['sold'] ?? product['stock'] ?? 0).toString(),
@@ -143,7 +111,9 @@ class _SearchPageState extends State<SearchPage> {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (_) => CartPage()),
+              MaterialPageRoute(
+                builder: (_) => ViewPage(product: product), 
+              ),
             );
           },
         );

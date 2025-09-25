@@ -61,22 +61,68 @@ class _EditProfilePageState extends State<EditProfilePage> {
     }
   }
 
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String label,
+    TextInputType? keyboardType,
+  }) {
+    return TextField(
+      controller: controller,
+      keyboardType: keyboardType,
+      style: const TextStyle(fontSize: 14),
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: const TextStyle(
+          fontFamily: 'Righteous',
+          color: Colors.black54,
+          fontSize: 14,
+        ),
+        filled: true,
+        fillColor: Colors.white,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.grey.shade300),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.grey.shade300),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Color(0xFFBF3131), width: 2),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFF9F9F9),
       appBar: AppBar(
-        title: const Text("Edit Profile"),
+        backgroundColor: const Color(0xFFBF3131),
+        elevation: 0,
+        title: const Text(
+          'Edit Profile',
+          style: TextStyle(
+            fontFamily: 'Righteous',
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.check),
+            icon: const Icon(Icons.check, color: Colors.white),
             onPressed: saveProfile,
           ),
         ],
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator(color: Color(0xFFBF3131)))
           : SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(20),
               child: Column(
                 children: [
                   // Foto Profil
@@ -84,7 +130,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     child: Stack(
                       children: [
                         CircleAvatar(
-                          radius: 50,
+                          radius: 55,
                           backgroundImage: ProfileService().getProfileImage(
                             localFile: imageFile,
                             fotoProfil: widget.user.fotoProfil,
@@ -96,58 +142,93 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           child: InkWell(
                             onTap: pickImage,
                             child: CircleAvatar(
-                              backgroundColor: Colors.blue,
-                              radius: 18,
-                              child: const Icon(Icons.camera_alt, size: 18, color: Colors.white),
+                              backgroundColor: const Color(0xFFBF3131),
+                              radius: 20,
+                              child: const Icon(
+                                Icons.camera_alt,
+                                size: 18,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
                         ),
                       ],
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 24),
 
                   // Nama
-                  TextField(
-                    controller: nameController,
-                    decoration: const InputDecoration(
-                      labelText: "Full Name",
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                  const SizedBox(height: 12),
+                  _buildTextField(controller: nameController, label: "Full Name"),
+                  const SizedBox(height: 16),
 
                   // Email
-                  TextField(
+                  _buildTextField(
                     controller: emailController,
-                    decoration: const InputDecoration(
-                      labelText: "Email",
-                      border: OutlineInputBorder(),
-                    ),
+                    label: "Email",
+                    keyboardType: TextInputType.emailAddress,
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 16),
 
                   // No. Telp
-                  TextField(
+                  _buildTextField(
                     controller: phoneController,
-                    decoration: const InputDecoration(
-                      labelText: "No. Telepon",
-                      border: OutlineInputBorder(),
-                    ),
+                    label: "No. Telepon",
+                    keyboardType: TextInputType.phone,
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 24),
 
                   // Tombol Ganti Password
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const ChangePasswordPage(),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 48,
+                    child: OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: const Color(0xFFBF3131),
+                        side: const BorderSide(color: Color(0xFFBF3131)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
                         ),
-                      );
-                    },
-                    child: const Text("Ganti Password"),
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const ChangePasswordPage(),
+                          ),
+                        );
+                      },
+                      child: const Text(
+                        "Ganti Password",
+                        style: TextStyle(
+                          fontFamily: 'Righteous',
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Tombol Save Profile
+                  SizedBox(
+                    width: double.infinity,
+                    height: 48,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFBF3131),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      onPressed: saveProfile,
+                      child: const Text(
+                        "Simpan Profil",
+                        style: TextStyle(
+                          fontFamily: 'Righteous',
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),
