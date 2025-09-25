@@ -1,9 +1,12 @@
+import 'package:e_mart_11bdg/presentation/pages/Settings/language.dart';
 import 'package:e_mart_11bdg/presentation/pages/Settings/myAccount/accountSecurity/account_security.dart';
 import 'package:e_mart_11bdg/presentation/pages/Settings/myAccount/accountAddress/myAddress.dart';
 import 'package:e_mart_11bdg/presentation/pages/Settings/userSettings/Notification/listNotif.dart';
 import 'package:e_mart_11bdg/presentation/pages/paymentMethod.dart';
+import 'package:e_mart_11bdg/data/models/User.dart'; // <-- tambahkan import
 import 'package:flutter/material.dart';
-import 'package:e_mart_11bdg/data/models/User.dart';
+import 'package:provider/provider.dart'; 
+import 'package:e_mart_11bdg/presentation/provider/Settings/languageProvider.dart';
 
 class SettingsPage extends StatefulWidget {
   final UserModel user;
@@ -51,10 +54,15 @@ class _SettingsPageState extends State<SettingsPage> {
           color: Colors.red,
         ),
       ),
-      subtitle: subtitle != null
-          ? Text(subtitle,
-              style: const TextStyle(color: Color.fromARGB(255, 165, 165, 165)))
-          : null,
+      subtitle:
+          subtitle != null
+              ? Text(
+                subtitle,
+                style: const TextStyle(
+                  color: Color.fromARGB(255, 165, 165, 165),
+                ),
+              )
+              : null,
       trailing: const Icon(Icons.chevron_right, color: Colors.red),
       onTap: onTap,
     );
@@ -63,9 +71,7 @@ class _SettingsPageState extends State<SettingsPage> {
   Future<void> _openAccountSecurity() async {
     final updatedUser = await Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (_) => AccountSecurity(user: currentUser),
-      ),
+      MaterialPageRoute(builder: (_) => AccountSecurity(user: currentUser)),
     );
 
     if (updatedUser != null) {
@@ -95,23 +101,37 @@ class _SettingsPageState extends State<SettingsPage> {
         children: [
           sectionHeader("Akun Saya"),
           menuItem("Akun & Keamanan", onTap: _openAccountSecurity),
-          menuItem("Alamat Saya", onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => MyaddressPage()),
-            );
-          }),
+          menuItem(
+            "Alamat Saya",
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => MyaddressPage()),
+              );
+            },
+          ),
 
           sectionHeader("Pengaturan"),
-          menuItem("Notifikasi", onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const NotificationList()),
-            );
-          }),
+          menuItem(
+            "Notifikasi",
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const NotificationList()),
+              );
+            },
+          ),
           menuItem("Blokir Pengguna"),
-          menuItem("Privasi"),
-          menuItem("Bahasa / Language", subtitle: "Bahasa Indonesia"),
+          menuItem(
+            "Bahasa / Language",
+            subtitle: context.watch<LanguageProvider>().selectedLang,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const LanguagePage()),
+              );
+            },
+          ),
 
           sectionHeader("Bantuan"),
           menuItem("Kebijakan E-Mart"),

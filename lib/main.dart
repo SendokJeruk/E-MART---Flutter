@@ -15,6 +15,7 @@ import 'package:e_mart_11bdg/presentation/pages/notifikasi.dart';
 import 'package:e_mart_11bdg/presentation/pages/Payment/payment.dart';
 import 'package:e_mart_11bdg/presentation/pages/service.dart';
 import 'package:e_mart_11bdg/presentation/pages/splash.view.dart';
+import 'package:e_mart_11bdg/presentation/provider/Settings/languageProvider.dart';
 import 'package:e_mart_11bdg/presentation/provider/Transaksi/transactionProvider.dart';
 import 'package:e_mart_11bdg/presentation/provider/Address/addressProvider.dart';
 import 'package:e_mart_11bdg/presentation/provider/kategori_provider.dart';
@@ -35,6 +36,8 @@ import '../presentation/provider/Address/addressProvider.dart';
 import 'presentation/provider/Transaksi/trackingStep.dart';
 import 'presentation/provider/detailOrderProvider.dart';
 import '../../presentation/pages/Transaksi/detailTransaksi.dart';
+import 'package:e_mart_11bdg/presentation/pages/Profile/editprofile.dart';
+import 'package:e_mart_11bdg/data/models/User.dart';
 
 
 void main() {
@@ -54,6 +57,7 @@ void main() {
         ChangeNotifierProvider(create: (_) => OrderProvider()),
         ChangeNotifierProvider(create: (_) => TransHistoryProvider()),
         ChangeNotifierProvider(create: (_) => ProductProvider()),
+        ChangeNotifierProvider(create: (_) => LanguageProvider()),
         ChangeNotifierProvider(create: (_) {
           final provider = DetailTransProvider();
           provider.loadDummyData(); 
@@ -77,7 +81,7 @@ class MainApp extends StatelessWidget {
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-      home: const ProfilePage(),
+      home: const HomePage(),
     );
   }
 }

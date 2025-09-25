@@ -61,7 +61,7 @@ class ProductProvider with ChangeNotifier {
     try {
       final token = await SharedPrefs.getToken();
       final res = await http.get(
-        Uri.parse("${Constants.baseUrl}/product/search?query=$query"),
+        Uri.parse("${Constants.baseUrl}/product?nama_product={query}"),
         headers: {
           'Authorization': 'Bearer $token',
           'Accept': 'application/json',
@@ -88,6 +88,73 @@ class ProductProvider with ChangeNotifier {
     _isSearching = false;
     _searchResult = [];
     _lastQuery = "";
+    notifyListeners();
+  }
+
+  Future<void> searchProductsByNamaProduct(String query) async {
+    if (query.isEmpty) {
+      _isSearching = false;
+      _searchResult = [];
+      _lastQuery = "";
+      notifyListeners();
+      return;
+    }
+
+    _isSearching = true;
+    _searchLoading = true;
+    _lastQuery = query;
+    notifyListeners();
+
+    try {
+      final token = await SharedPrefs.getToken();
+
+      // 🔑 Gunakan Uri builder supaya query aman
+      final uri = Uri.parse(
+        "${Constants.baseUrl}/product",
+      ).replace(queryParameters: {"nama_product": query});
+
+      final res = await http.get(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Accept': 'application/json',
+        },
+      );
+
+      if (res.statusCode == 200) {
+        final body = jsonDecode(res.body);
+        debugPrint("🔍 Search response: $body");
+        debugPrint("🔍 Body type: ${body.runtimeType}");
+
+        if (body is Map<String, dynamic>) {
+          if (body.containsKey('data')) {
+            final innerData = body['data'];
+            if (innerData is Map && innerData.containsKey('data')) {
+              // 📌 ambil list produk dari pagination
+              _searchResult = List<Map<String, dynamic>>.from(
+                innerData['data'],
+              );
+            } else if (innerData is List) {
+              _searchResult = List<Map<String, dynamic>>.from(innerData);
+            } else {
+              _searchResult = [];
+            }
+          } else {
+            debugPrint("ℹ️ Tidak ada data, message: ${body['message']}");
+            _searchResult = [];
+          }
+        } else if (body is List) {
+          _searchResult = List<Map<String, dynamic>>.from(body);
+        } else {
+          _searchResult = [];
+        }
+      }
+    } catch (e) {
+      _searchResult = [];
+      debugPrint("❌ Error searchProductsByNamaProduct: $e");
+    }
+
+    _searchLoading = false;
     notifyListeners();
   }
 }
