@@ -8,12 +8,23 @@ import 'package:e_mart_11bdg/core/utils/constants.dart';
 class ProductProvider with ChangeNotifier {
   final ProductService _productService = ProductService();
 
+  int _perPage = 10; // awal tampil 10
+  int get perPage => _perPage;
+
   // --- All Products
   List<dynamic> _products = [];
   List<dynamic> get products => _products;
-
   bool _isLoading = false;
+  bool _isLoadingMore = false;
+
+  int _currentPage = 1;
+  int _lastPage = 1;
+
   bool get isLoading => _isLoading;
+  bool get isLoadingMore => _isLoadingMore;
+
+  int get currentPage => _currentPage;
+  int get lastPage => _lastPage;
 
   // --- Search Products
   List<dynamic> _searchResult = [];
@@ -29,18 +40,56 @@ class ProductProvider with ChangeNotifier {
   String get lastQuery => _lastQuery;
 
   // --- Fetch All Products
-  Future<void> fetchProducts() async {
-    _isLoading = true;
-    notifyListeners();
+  Future<void> fetchProducts({bool loadMore = false}) async {
+    if (loadMore) {
+      if (_currentPage >= _lastPage) return; // sudah di halaman terakhir
+      _isLoadingMore = true;
+      notifyListeners();
+      _currentPage++;
+    } else {
+      _isLoading = true;
+      _currentPage = 1;
+      _products = [];
+      notifyListeners();
+    }
 
     try {
-      _products = await _productService.getProducts();
+      final token = await SharedPrefs.getToken();
+      final res = await http.get(
+        Uri.parse("${Constants.baseUrl}/product?page=$_currentPage"),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Accept': 'application/json',
+        },
+      );
+
+      if (res.statusCode == 200) {
+        final body = jsonDecode(res.body);
+
+        final data = body['data']; // ini object paginate
+        final List<dynamic> newProducts = data['data'] ?? [];
+
+        _lastPage = data['last_page'] ?? 1;
+
+        if (loadMore) {
+          _products.addAll(newProducts); // append
+        } else {
+          _products = newProducts; // replace (refresh awal)
+        }
+      }
     } catch (e) {
-      debugPrint("Error fetchProducts: $e");
+      debugPrint("❌ Error fetchProducts: $e");
     }
 
     _isLoading = false;
+    _isLoadingMore = false;
     notifyListeners();
+  }
+
+  // fungsi buat load lebih banyak
+  Future<void> loadMoreProducts() async {
+    _perPage = _perPage * 2; // setiap kali klik → kali 2
+    await fetchProducts();
   }
 
   // --- Search Products
