@@ -1,3 +1,4 @@
+import 'package:e_mart_11bdg/presentation/pages/Settings/PrivacyandPolicy.dart';
 import 'package:e_mart_11bdg/presentation/pages/Settings/language.dart';
 import 'package:e_mart_11bdg/presentation/pages/Settings/myAccount/accountSecurity/account_security.dart';
 import 'package:e_mart_11bdg/presentation/pages/Settings/myAccount/accountAddress/myAddress.dart';
@@ -5,7 +6,7 @@ import 'package:e_mart_11bdg/presentation/pages/Settings/userSettings/Notificati
 import 'package:e_mart_11bdg/presentation/pages/paymentMethod.dart';
 import 'package:e_mart_11bdg/data/models/User.dart'; // <-- tambahkan import
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart'; 
+import 'package:provider/provider.dart';
 import 'package:e_mart_11bdg/presentation/provider/Settings/languageProvider.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -121,7 +122,6 @@ class _SettingsPageState extends State<SettingsPage> {
               );
             },
           ),
-          menuItem("Blokir Pengguna"),
           menuItem(
             "Bahasa / Language",
             subtitle: context.watch<LanguageProvider>().selectedLang,
@@ -134,9 +134,16 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
 
           sectionHeader("Bantuan"),
-          menuItem("Kebijakan E-Mart"),
+          menuItem(
+            "Kebijakan E-Mart",
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const PrivacyPolicyPage()),
+              );
+            },
+          ),
           menuItem("Informasi"),
-          menuItem("Ajukan HAPUS AKUN"),
           const SizedBox(height: 10),
         ],
       ),
