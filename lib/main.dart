@@ -1,5 +1,5 @@
 import 'dart:developer';
-import 'package:e_mart_11bdg/presentation/pages/Payment/groupPayment.dart';
+import 'package:e_mart_11bdg/presentation/pages/Payment/GroupPayment.dart';
 import 'package:e_mart_11bdg/presentation/pages/Profile.dart';
 import 'package:e_mart_11bdg/presentation/pages/Profile/editprofile.dart';
 import 'package:e_mart_11bdg/presentation/pages/Profile/orderList.dart';
@@ -16,7 +16,8 @@ import 'package:e_mart_11bdg/presentation/pages/Payment/payment.dart';
 import 'package:e_mart_11bdg/presentation/pages/service.dart';
 import 'package:e_mart_11bdg/presentation/pages/splash.view.dart';
 import 'package:e_mart_11bdg/presentation/provider/Settings/languageProvider.dart';
-import 'package:e_mart_11bdg/presentation/provider/Transaksi/transactionProvider.dart';
+import 'package:e_mart_11bdg/presentation/provider/Transaksi/transaction_history.dart';
+import 'package:e_mart_11bdg/presentation/provider/Transaksi/transaction_provider.dart';
 import 'package:e_mart_11bdg/presentation/provider/Address/addressProvider.dart';
 import 'package:e_mart_11bdg/presentation/provider/kategori_provider.dart';
 import 'package:e_mart_11bdg/presentation/provider/Address/locationProvider.dart';
@@ -54,6 +55,7 @@ void main() {
         ChangeNotifierProvider(create: (_) => AddressProvider()),
         ChangeNotifierProvider(create: (_) => TrackingProvider()),
         ChangeNotifierProvider(create: (_) => DetailTransProvider()),
+        ChangeNotifierProvider(create: (_) => TransactionProvider()),
         ChangeNotifierProvider(create: (_) => OrderProvider()),
         ChangeNotifierProvider(create: (_) => TransHistoryProvider()),
         ChangeNotifierProvider(create: (_) => ProductProvider()),

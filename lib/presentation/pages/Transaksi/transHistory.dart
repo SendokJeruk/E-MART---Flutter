@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../pages/Transaksi/detailTransaksi.dart';
-import '../../provider/Transaksi/transactionProvider.dart';
+import '../../provider/Transaksi/transaction_history.dart';
 import '../../widgets/filterTransHistory.dart';
 
 class TransHistory extends StatefulWidget {

@@ -9,16 +9,16 @@ import '../../widgets/BoxSectionHeader/sectionHeader.dart';
 import '../../widgets/BoxSectionHeader/boxContent.dart';
 import '../../widgets/Payment/bodyPaymentProduk.dart';
 
-class GroupPaymentPage extends StatefulWidget {
+class DetailTransactionPage extends StatefulWidget {
     final List<int> selectedIds;
 
-  const GroupPaymentPage({super.key, required this.selectedIds});
+  const DetailTransactionPage({super.key, required this.selectedIds});
 
   @override
-  State<GroupPaymentPage> createState() => _GroupPaymentPageState();
+  State<DetailTransactionPage> createState() => _DetailTransactionPageState();
 }
 
-class _GroupPaymentPageState extends State<GroupPaymentPage> {
+class _DetailTransactionPageState extends State<DetailTransactionPage> {
   String? selectedCourier;
 
   @override
@@ -131,7 +131,7 @@ class _GroupPaymentPageState extends State<GroupPaymentPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  sectionHeader("Pilih Kurir"),
+                  sectionHeader("Detail Produk"),
                   const Divider(color: Colors.red),
 
                   // --- HEADER TOKO ---
