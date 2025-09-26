@@ -3,6 +3,7 @@ import 'package:e_mart_11bdg/presentation/pages/Payment/groupPayment.dart';
 import 'package:e_mart_11bdg/presentation/pages/Profile.dart';
 import 'package:e_mart_11bdg/presentation/pages/Profile/editprofile.dart';
 import 'package:e_mart_11bdg/presentation/pages/Profile/orderList.dart';
+import 'package:e_mart_11bdg/presentation/pages/Settings/PrivacyandPolicy.dart';
 import 'package:e_mart_11bdg/presentation/pages/Settings/myAccount/accountAddress/addAddress.dart';
 import 'package:e_mart_11bdg/presentation/pages/Settings/myAccount/accountAddress/myAddress.dart';
 import 'package:e_mart_11bdg/presentation/pages/Settings/myAccount/accountSecurity/account_security.dart';

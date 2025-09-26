@@ -223,24 +223,6 @@ class _ProfilePageState extends State<ProfilePage> {
                                 padding: EdgeInsets.symmetric(vertical: 10),
                                 child: Divider(color: Colors.red),
                               ),
-                              actionRow(
-                                "Dompet Saya",
-                                Icons.account_balance_wallet,
-                                iconSize: 20,
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder:
-                                          (_) => SettingsPage(
-                                            user: user!,
-                                          ), // ✅ kirim user
-                                    ),
-                                  ).then((_) {
-                                    fetchProfile();
-                                  });
-                                },
-                              ),
                               const Divider(color: Colors.white),
                               actionRow(
                                 "Pesanan Saya",
